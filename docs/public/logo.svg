@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="mwaa-get-env-action">
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="#1b2a41"/>
+  <g transform="translate(0 -3)"><g fill="none" stroke-width="4" stroke-linecap="round">
+    <path d="M16 42A16 16 0 0 1 40 28.14" stroke="#f97316"/>
+    <path d="M40 28.14A16 16 0 0 1 48 42" stroke="#3fb950"/>
+    <path d="M32 42L41.2 34.3" stroke="#e6edf3"/>
+  </g>
+  <circle cx="32" cy="42" r="3.4" fill="#e6edf3"/><circle cx="48" cy="42" r="4" fill="#3fb950"/><circle cx="49.2" cy="40.8" r="1" fill="#1b2a41"/></g>
+</svg>
