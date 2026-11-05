@@ -1,0 +1,17 @@
+---
+# MegaLinter configuration: https://megalinter.io/latest/configuration/
+APPLY_FIXES: none
+
+# Generated or vendored files that the project doesn't hand-edit.
+FILTER_REGEX_EXCLUDE: '(^|/)(dist|node_modules)/|package-lock\.json$'
+
+# Reporters that need token scopes or network access beyond the read-only, egress-blocked CI job.
+GITHUB_COMMENT_REPORTER: false
+GITHUB_STATUS_REPORTER: false
+UPDATED_SOURCES_REPORTER: false
+SARIF_REPORTER: false
+TELEMETRY: false
+
+# Link checking calls out to arbitrary hosts, which the egress policy blocks.
+DISABLE_LINTERS:
+  - MARKDOWN_MARKDOWN_LINK_CHECK
