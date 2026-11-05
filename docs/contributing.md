@@ -18,6 +18,7 @@ npm run check
 | `dist/index.cjs`    | The bundled action that runs on the runner.                     |
 | `scripts/`          | Build script and the third-party license generator.             |
 | `.github/linters/`  | MegaLinter, Prettier, cspell, and markdownlint configuration.   |
+| `.github/codeql/`   | CodeQL configuration.                                           |
 
 ## Tests
 
@@ -26,3 +27,13 @@ The tests use `node:test`, and Node 24 runs the TypeScript directly, so there is
 ## The dist directory
 
 The action runs from `dist/index.cjs`, so commit the rebuilt file with source changes. CI rebuilds it and fails when the committed copy is stale.
+
+## Workflow security
+
+CI audits the workflows with zizmor's pedantic persona. To run the same audit locally, including the online audits, with a GitHub token:
+
+```sh
+GH_TOKEN=$(gh auth token) zizmor --persona pedantic .github
+```
+
+Every job starts with step-security/harden-runner in `block` mode, so a job that needs a new network endpoint fails until the endpoint is added to its `allowed-endpoints` list.

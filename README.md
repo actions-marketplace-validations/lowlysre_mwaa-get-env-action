@@ -4,6 +4,8 @@
 
 <p align="center">
   <a href="https://github.com/lowlysre/mwaa-get-env-action/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/lowlysre/mwaa-get-env-action/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/lowlysre/mwaa-get-env-action/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/lowlysre/mwaa-get-env-action/actions/workflows/codeql.yml/badge.svg"></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/lowlysre/mwaa-get-env-action"><img alt="OpenSSF Scorecard" src="https://api.scorecard.dev/projects/github.com/lowlysre/mwaa-get-env-action/badge"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/github/license/lowlysre/mwaa-get-env-action"></a>
 </p>
 
@@ -12,6 +14,10 @@
 Get the details of an Amazon MWAA environment in GitHub Actions: status, Airflow version, environment class, web server URL, and the S3 paths and object versions of its requirements, plugins, and startup script. It calls the `GetEnvironment` API (the same data as `aws mwaa get-environment`) with the AWS credentials already in your job, so there are no MWAA CLI or web login tokens to manage.
 
 The step fails with a clear error when the environment doesn't exist, so it doubles as an existence check. Every run also writes a color-coded log, a job summary, and warning annotations for unhealthy environments.
+
+- **Two runtime dependencies**: `@actions/core` and the AWS SDK's MWAA client, bundled into `dist/` with [every third-party license](dist/THIRD_PARTY_LICENSES.txt).
+- **[Immutable releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases)**: a published release's tag and assets can't be changed, so a pinned version always runs the same code.
+- **Hardened CI**: every job blocks network egress with harden-runner, every action is pinned to a commit SHA, the workflows pass zizmor's pedantic audit, and CodeQL scans the code and workflows.
 
 This action is built and maintained by [lowlysre](https://github.com/lowlysre). It's an independent project, not affiliated with or endorsed by AWS.
 
