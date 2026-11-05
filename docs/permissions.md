@@ -2,13 +2,9 @@
 
 The credentials in the job need `airflow:GetEnvironment` on the environment, and nothing else.
 
-<!-- toc -->
-
 - [IAM policy](#iam-policy)
 - [Authenticate with GitHub OIDC](#authenticate-with-github-oidc)
 - [Troubleshooting](#troubleshooting)
-
-<!-- tocstop -->
 
 ## IAM policy
 

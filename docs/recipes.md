@@ -2,15 +2,11 @@
 
 Each recipe assumes AWS credentials are already configured and the action step has `id: mwaa`. The examples use `@v1` as a placeholder because neither this action nor its sibling has a release yet. Once they do, pin both to a full commit SHA with the release tag in a comment.
 
-<!-- toc -->
-
 - [Check whether an environment exists](#check-whether-an-environment-exists)
 - [Block a deploy unless the environment is healthy](#block-a-deploy-unless-the-environment-is-healthy)
 - [Detect drift between S3 and the environment](#detect-drift-between-s3-and-the-environment)
 - [Read other fields, or many environments](#read-other-fields-or-many-environments)
 - [Update an environment and verify it](#update-an-environment-and-verify-it)
-
-<!-- tocstop -->
 
 ## Check whether an environment exists
 

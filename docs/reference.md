@@ -1,12 +1,8 @@
 # Reference
 
-<!-- toc -->
-
 - [Inputs](#inputs)
 - [Outputs](#outputs)
 - [Logs, annotations, and failures](#logs-annotations-and-failures)
-
-<!-- tocstop -->
 
 ## Inputs
 
