@@ -5,7 +5,6 @@
 - [Inputs](#inputs)
 - [Outputs](#outputs)
 - [Logs, annotations, and failures](#logs-annotations-and-failures)
-- [Design notes](#design-notes)
 
 <!-- tocstop -->
 
@@ -68,13 +67,3 @@ The step fails with an error annotation, and sets no outputs, when:
 | Missing IAM permission    | `Access denied calling airflow:GetEnvironment for '<name>' in <region>.` |
 | Invalid name or no region | `Invalid environment name '<name>': ...` or `No AWS region: ...`         |
 | Any other AWS error       | `GetEnvironment failed for '<name>' in <region>: <ErrorName>: <message>` |
-
-## Design notes
-
-`aws mwaa get-environment` works in a workflow too. This action wraps the same `GetEnvironment` API for the parts that are tedious in shell: outputs for the fields CI needs, a readable not-found failure, log groups, a job summary, and annotations.
-
-It calls the AWS SDK instead of the CLI. The CLI changed its default error output in version 2.34 and AWS CLI v1 formats errors differently again, so matching stderr would need a branch per version. The SDK returns a typed `ResourceNotFoundException`, and the bundled SDK means the runner needs neither the AWS CLI nor `jq`.
-
-It needs no MWAA tokens. The CLI and web login tokens from `aws mwaa create-cli-token` exist to run Airflow commands and open the Airflow UI. `GetEnvironment` is an ordinary AWS API call authorized by IAM.
-
-The action only reads. Changing an environment is the job of [mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action).

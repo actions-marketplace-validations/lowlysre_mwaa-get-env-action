@@ -71,15 +71,13 @@ Fields the environment doesn't set are empty strings. See the [reference](docs/r
 | Log groups, job summary, and failure annotations | ✅                                                                                  | ❌                                             |
 | Update or create an environment                  | ❌ See [mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action) | ✅                                             |
 
-See the [design notes](docs/reference.md#design-notes) for the reasoning.
-
 ## Related actions
 
 [mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action) updates an environment (`aws mwaa update-environment`) and can wait until it is `AVAILABLE` again. The two share input and output names, so a typical pipeline reads the environment with this action, updates it, then reads it again to confirm. See [update an environment and verify it](docs/recipes.md#update-an-environment-and-verify-it) for a complete workflow.
 
 ## Documentation
 
-- [Reference](docs/reference.md): inputs, outputs, annotations, errors, and design notes
+- [Reference](docs/reference.md): inputs, outputs, annotations, and errors
 - [Recipes](docs/recipes.md): existence checks, gating deploys, S3 drift, and updating with mwaa-update-env-action
 - [Permissions and authentication](docs/permissions.md): IAM policy, OIDC, and troubleshooting
 - [Contributing](docs/contributing.md)
