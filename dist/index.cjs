@@ -48837,31 +48837,37 @@ function endGroup() {
 var import_client_mwaa = __toESM(require_dist_cjs16(), 1);
 
 // src/format.ts
-var FAILED = /* @__PURE__ */ new Set(["CREATE_FAILED", "UPDATE_FAILED", "UNAVAILABLE", "DELETED"]);
-function classify(status) {
-  if (status === "AVAILABLE") return "ok";
-  if (status && FAILED.has(status)) return "failed";
-  return "transitioning";
-}
-var ANSI = {
-  reset: "\x1B[0m",
-  bold: "\x1B[1m",
-  dim: "\x1B[2m",
-  red: "\x1B[31m",
-  green: "\x1B[32m",
-  yellow: "\x1B[33m",
-  cyan: "\x1B[36m"
-};
-var paint = {
-  bold: (s2) => `${ANSI.bold}${s2}${ANSI.reset}`,
-  dim: (s2) => `${ANSI.dim}${s2}${ANSI.reset}`,
-  cyan: (s2) => `${ANSI.cyan}${s2}${ANSI.reset}`,
-  health: (h5, s2) => {
-    const c5 = h5 === "ok" ? ANSI.green : h5 === "failed" ? ANSI.red : ANSI.yellow;
-    return `${c5}${s2}${ANSI.reset}`;
+var ANSI = { ok: "32", busy: "94", warn: "33", fail: "31", idle: "90" };
+var SUMMARY_DOT = { ok: "\u{1F7E2}", busy: "\u{1F535}", warn: "\u{1F7E1}", fail: "\u{1F534}", idle: "\u26AA" };
+var paint = (code, text) => `\x1B[${code}m${text}\x1B[0m`;
+var dim = (text) => paint("2", text);
+function toneOf(status) {
+  switch (status) {
+    case "AVAILABLE":
+    case "SUCCESS":
+      return "ok";
+    case "ROLLING_BACK":
+    case "MAINTENANCE":
+      return "warn";
+    case "FAILED":
+    case "UPDATE_FAILED":
+    case "CREATE_FAILED":
+    case "UNAVAILABLE":
+    case "DELETED":
+      return "fail";
+    case void 0:
+    case "":
+      return "idle";
+    default:
+      return "busy";
   }
-};
-var icon = (h5) => h5 === "ok" ? "\u2705" : h5 === "failed" ? "\u274C" : "\u23F3";
+}
+function logStatus(status, tone = toneOf(status)) {
+  return paint(ANSI[tone], `\u25CF ${status || "unknown"}`);
+}
+function summaryStatus(status, tone = toneOf(status)) {
+  return `${SUMMARY_DOT[tone]} ${status ?? ""}`.trimEnd();
+}
 function toOutputs(env2) {
   const s2 = (v) => v ?? "";
   return {
@@ -48906,7 +48912,7 @@ async function run(inputs, client) {
     setFailed("No AWS region: set the 'region' input or AWS_REGION (aws-actions/configure-aws-credentials sets it for you).");
     return;
   }
-  info(`${paint.bold("MWAA environment")} ${paint.cyan(name)} ${paint.dim(`(${region})`)}`);
+  info(`${paint("1", "MWAA environment")} ${paint("36", name)} ${dim(`(${region})`)}`);
   const mwaa = client ?? new import_client_mwaa.MWAAClient({ region });
   let environment;
   try {
@@ -48935,35 +48941,35 @@ async function run(inputs, client) {
   for (const [key, value] of Object.entries(outputs)) setOutput(key, value);
   const json = JSON.stringify(environment);
   setOutput("json", json);
-  const health = classify(environment.Status);
   const status = outputs.status || "UNKNOWN";
-  info(`${paint.bold("Status")}  ${paint.health(health, status)}`);
+  info(`${paint("1", "Status")}       ${logStatus(environment.Status)}`);
+  info(`${paint("1", "Last update")}  ${logStatus(environment.LastUpdate?.Status)}`);
   startGroup("Environment details");
   for (const [key, value] of Object.entries(outputs)) {
-    if (key !== "name" && key !== "status") info(`${paint.dim(key.padEnd(34))} ${value || paint.dim("-")}`);
+    if (key !== "name" && key !== "status") info(`${dim(key.padEnd(34))} ${value || dim("-")}`);
   }
   endGroup();
   startGroup("Raw JSON");
   info(JSON.stringify(environment, null, 2));
   endGroup();
-  if (health === "failed") warning(`MWAA environment '${name}' is ${status}.`, { title: "Unhealthy MWAA environment" });
+  if (toneOf(environment.Status) === "fail")
+    warning(`MWAA environment '${name}' is ${status}.`, { title: "Unhealthy MWAA environment" });
   if (outputs["last-update-status"] === "FAILED") {
     const e5 = environment.LastUpdate?.Error;
     warning(`The last update of '${name}' failed${e5 ? `: ${e5.ErrorCode}: ${e5.ErrorMessage}` : "."}`, { title: "MWAA update failed" });
   }
-  if (inputs.summary) await writeSummary(name, region, health, outputs, environment);
+  if (inputs.summary) await writeSummary(name, region, outputs, environment);
 }
-async function writeSummary(name, region, health, o3, environment) {
+async function writeSummary(name, region, o3, environment) {
   const code = (v) => v ? `<code>${v}</code>` : "\u2013";
   const withVersion = (path, version) => [path, version].filter(Boolean).join(" @ ");
-  await summary.addHeading(`${icon(health)} MWAA environment ${name}`, 2).addRaw(
-    `Region <code>${region}</code> \xB7 status <b>${o3.status || "UNKNOWN"}</b> \xB7 last update <b>${o3["last-update-status"] || "n/a"}</b>`,
-    true
-  ).addTable([
+  await summary.addHeading(`MWAA environment: ${name}`, 2).addRaw(`Region <code>${region}</code>`, true).addTable([
     [
       { data: "Property", header: true },
       { data: "Value", header: true }
     ],
+    ["Status", summaryStatus(environment.Status)],
+    ["Last update", summaryStatus(environment.LastUpdate?.Status)],
     ["Airflow version", code(o3["airflow-version"] ?? "")],
     ["Environment class", code(o3["environment-class"] ?? "")],
     ["Webserver URL", code(o3["webserver-url"] ?? "")],

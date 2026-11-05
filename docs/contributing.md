@@ -13,7 +13,7 @@ npm run check
 |---------------------|-----------------------------------------------------------------|
 | `src/index.ts`      | Entry point.                                                    |
 | `src/main.ts`       | Reads inputs, calls `GetEnvironment`, sets outputs and summary. |
-| `src/format.ts`     | Status classification, colors, and the output mapping.          |
+| `src/format.ts`     | Status colors, log and summary dots, and the output mapping.    |
 | `test/main.test.ts` | Tests against a mocked SDK and against a local HTTP server.     |
 | `dist/index.cjs`    | The bundled action that runs on the runner.                     |
 | `scripts/`          | Build script and the third-party license generator.             |

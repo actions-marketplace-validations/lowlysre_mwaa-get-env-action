@@ -39,7 +39,17 @@ Fields the environment doesn't set are returned as empty strings. Output names a
 
 ## Logs, annotations, and failures
 
-The log colors `AVAILABLE` green, `CREATE_FAILED`, `UPDATE_FAILED`, `UNAVAILABLE`, and `DELETED` red, and every other status yellow. The same red statuses, or a `last-update-status` of `FAILED`, add a warning annotation without failing the step, so your workflow decides what to do with the outputs.
+The log shows `status` and `last-update-status` as colored dots. The job summary shows them as colored circles, because it doesn't render ANSI colors.
+
+| Color  | Statuses                                                             |
+|--------|----------------------------------------------------------------------|
+| Green  | `AVAILABLE`, `SUCCESS`                                               |
+| Blue   | Any other status, such as `UPDATING`, `CREATING`, or `PENDING`       |
+| Yellow | `ROLLING_BACK`, `MAINTENANCE`                                        |
+| Red    | `CREATE_FAILED`, `UPDATE_FAILED`, `UNAVAILABLE`, `DELETED`, `FAILED` |
+| Gray   | No status                                                            |
+
+A red `status`, or a `last-update-status` of `FAILED`, also adds a warning annotation without failing the step, so your workflow decides what to do with the outputs.
 
 The step fails with an error annotation, and sets no outputs, when:
 

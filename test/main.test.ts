@@ -6,7 +6,7 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, it, mock } from 'node:test'
 import { GetEnvironmentCommand, MWAAClient, ResourceNotFoundException } from '@aws-sdk/client-mwaa'
 import { mockClient, type AwsClientStub } from 'aws-sdk-client-mock'
-import { classify, toOutputs } from '../src/format.ts'
+import { logStatus } from '../src/format.ts'
 import { readInputs, run, type Inputs } from '../src/main.ts'
 
 const full = {
@@ -199,13 +199,24 @@ describe('run with a mocked SDK', () => {
     sdk.on(GetEnvironmentCommand).resolves({ Environment: full })
     await run(inputs({ summary: true }), sdkClient())
     const md = readFileSync(summaryFile, 'utf8')
-    assert.match(md, /MWAA environment prod/)
+    assert.match(md, /MWAA environment: prod/)
+    assert.match(md, /🟢 AVAILABLE/)
+    assert.match(md, /🟢 SUCCESS/)
+    assert.doesNotMatch(md, /\u001b\[/)
     assert.match(md, /2\.10\.3/)
     assert.match(md, /reqv1\.AbCdEf/)
 
     writeFileSync(summaryFile, '')
     await run(inputs({ summary: false }), sdkClient())
     assert.equal(readFileSync(summaryFile, 'utf8'), '')
+  })
+
+  it('logs status and last update as colored dots', async () => {
+    sdk.on(GetEnvironmentCommand).resolves({ Environment: full })
+    await run(inputs(), sdkClient())
+    assert.ok(stdout.includes(logStatus('AVAILABLE')))
+    assert.ok(stdout.includes(logStatus('SUCCESS')))
+    assert.doesNotMatch(stdout, /[✅❌⏳🟢🔵🟡🔴⚪]/u)
   })
 
   it('groups verbose output so the log stays readable', async () => {
@@ -285,19 +296,5 @@ describe('readInputs', () => {
     assert.equal(readInputs({ AWS_REGION: 'us-east-1', AWS_DEFAULT_REGION: 'us-west-1' }).region, 'us-east-1')
     assert.equal(readInputs({ AWS_DEFAULT_REGION: 'us-west-1' }).region, 'us-west-1')
     assert.equal(readInputs({}).region, '')
-  })
-})
-
-describe('format', () => {
-  it('classifies statuses', () => {
-    assert.equal(classify('AVAILABLE'), 'ok')
-    assert.equal(classify('UPDATE_FAILED'), 'failed')
-    assert.equal(classify('CREATE_FAILED'), 'failed')
-    assert.equal(classify('UPDATING'), 'transitioning')
-    assert.equal(classify(undefined), 'transitioning')
-  })
-
-  it('maps all 15 string outputs', () => {
-    assert.equal(Object.keys(toOutputs(full)).length, 15)
   })
 })

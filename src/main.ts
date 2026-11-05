@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import { GetEnvironmentCommand, MWAAClient, type Environment } from '@aws-sdk/client-mwaa'
-import { classify, icon, paint, toOutputs, type Health } from './format.ts'
+import { dim, logStatus, paint, summaryStatus, toneOf, toOutputs } from './format.ts'
 
 const NAME_PATTERN = /^[a-zA-Z][0-9a-zA-Z-_]{0,79}$/
 
@@ -35,7 +35,7 @@ export async function run(inputs: Inputs, client?: Pick<MWAAClient, 'send'>): Pr
     return
   }
 
-  core.info(`${paint.bold('MWAA environment')} ${paint.cyan(name)} ${paint.dim(`(${region})`)}`)
+  core.info(`${paint('1', 'MWAA environment')} ${paint('36', name)} ${dim(`(${region})`)}`)
   const mwaa = client ?? new MWAAClient({ region })
 
   let environment: Environment | undefined
@@ -67,48 +67,42 @@ export async function run(inputs: Inputs, client?: Pick<MWAAClient, 'send'>): Pr
   const json = JSON.stringify(environment)
   core.setOutput('json', json)
 
-  const health = classify(environment.Status)
   const status = outputs.status || 'UNKNOWN'
-  core.info(`${paint.bold('Status')}  ${paint.health(health, status)}`)
+  core.info(`${paint('1', 'Status')}       ${logStatus(environment.Status)}`)
+  core.info(`${paint('1', 'Last update')}  ${logStatus(environment.LastUpdate?.Status)}`)
 
   core.startGroup('Environment details')
   for (const [key, value] of Object.entries(outputs)) {
-    if (key !== 'name' && key !== 'status') core.info(`${paint.dim(key.padEnd(34))} ${value || paint.dim('-')}`)
+    if (key !== 'name' && key !== 'status') core.info(`${dim(key.padEnd(34))} ${value || dim('-')}`)
   }
   core.endGroup()
   core.startGroup('Raw JSON')
   core.info(JSON.stringify(environment, null, 2))
   core.endGroup()
 
-  if (health === 'failed') core.warning(`MWAA environment '${name}' is ${status}.`, { title: 'Unhealthy MWAA environment' })
+  if (toneOf(environment.Status) === 'fail')
+    core.warning(`MWAA environment '${name}' is ${status}.`, { title: 'Unhealthy MWAA environment' })
   if (outputs['last-update-status'] === 'FAILED') {
     const e = environment.LastUpdate?.Error
     core.warning(`The last update of '${name}' failed${e ? `: ${e.ErrorCode}: ${e.ErrorMessage}` : '.'}`, { title: 'MWAA update failed' })
   }
 
-  if (inputs.summary) await writeSummary(name, region, health, outputs, environment)
+  if (inputs.summary) await writeSummary(name, region, outputs, environment)
 }
 
-async function writeSummary(
-  name: string,
-  region: string,
-  health: Health,
-  o: Record<string, string>,
-  environment: Environment
-): Promise<void> {
+async function writeSummary(name: string, region: string, o: Record<string, string>, environment: Environment): Promise<void> {
   const code = (v: string) => (v ? `<code>${v}</code>` : '–')
   const withVersion = (path: string, version: string) => [path, version].filter(Boolean).join(' @ ')
   await core.summary
-    .addHeading(`${icon(health)} MWAA environment ${name}`, 2)
-    .addRaw(
-      `Region <code>${region}</code> · status <b>${o.status || 'UNKNOWN'}</b> · last update <b>${o['last-update-status'] || 'n/a'}</b>`,
-      true
-    )
+    .addHeading(`MWAA environment: ${name}`, 2)
+    .addRaw(`Region <code>${region}</code>`, true)
     .addTable([
       [
         { data: 'Property', header: true },
         { data: 'Value', header: true }
       ],
+      ['Status', summaryStatus(environment.Status)],
+      ['Last update', summaryStatus(environment.LastUpdate?.Status)],
       ['Airflow version', code(o['airflow-version'] ?? '')],
       ['Environment class', code(o['environment-class'] ?? '')],
       ['Webserver URL', code(o['webserver-url'] ?? '')],

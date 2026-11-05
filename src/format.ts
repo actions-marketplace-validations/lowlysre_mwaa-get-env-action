@@ -1,36 +1,45 @@
 import type { Environment } from '@aws-sdk/client-mwaa'
 
-export type Health = 'ok' | 'transitioning' | 'failed'
+export type Tone = 'ok' | 'busy' | 'warn' | 'fail' | 'idle'
 
-const FAILED = new Set(['CREATE_FAILED', 'UPDATE_FAILED', 'UNAVAILABLE', 'DELETED'])
+const ANSI: Record<Tone, string> = { ok: '32', busy: '94', warn: '33', fail: '31', idle: '90' }
+const SUMMARY_DOT: Record<Tone, string> = { ok: '🟢', busy: '🔵', warn: '🟡', fail: '🔴', idle: '⚪' }
 
-export function classify(status: string | undefined): Health {
-  if (status === 'AVAILABLE') return 'ok'
-  if (status && FAILED.has(status)) return 'failed'
-  return 'transitioning'
-}
+export const paint = (code: string, text: string): string => `\u001b[${code}m${text}\u001b[0m`
+export const dim = (text: string): string => paint('2', text)
 
-const ANSI = {
-  reset: '\u001b[0m',
-  bold: '\u001b[1m',
-  dim: '\u001b[2m',
-  red: '\u001b[31m',
-  green: '\u001b[32m',
-  yellow: '\u001b[33m',
-  cyan: '\u001b[36m'
-}
-
-export const paint = {
-  bold: (s: string) => `${ANSI.bold}${s}${ANSI.reset}`,
-  dim: (s: string) => `${ANSI.dim}${s}${ANSI.reset}`,
-  cyan: (s: string) => `${ANSI.cyan}${s}${ANSI.reset}`,
-  health: (h: Health, s: string) => {
-    const c = h === 'ok' ? ANSI.green : h === 'failed' ? ANSI.red : ANSI.yellow
-    return `${c}${s}${ANSI.reset}`
+// Covers both Environment.Status and LastUpdate.Status values.
+export function toneOf(status: string | undefined): Tone {
+  switch (status) {
+    case 'AVAILABLE':
+    case 'SUCCESS':
+      return 'ok'
+    case 'ROLLING_BACK':
+    case 'MAINTENANCE':
+      return 'warn'
+    case 'FAILED':
+    case 'UPDATE_FAILED':
+    case 'CREATE_FAILED':
+    case 'UNAVAILABLE':
+    case 'DELETED':
+      return 'fail'
+    case undefined:
+    case '':
+      return 'idle'
+    default:
+      return 'busy'
   }
 }
 
-export const icon = (h: Health) => (h === 'ok' ? '✅' : h === 'failed' ? '❌' : '⏳')
+// A colored "● STATUS" for the step log.
+export function logStatus(status: string | undefined, tone: Tone = toneOf(status)): string {
+  return paint(ANSI[tone], `● ${status || 'unknown'}`)
+}
+
+// A "🟢 STATUS" for the job summary, which renders markdown and ignores ANSI codes.
+export function summaryStatus(status: string | undefined, tone: Tone = toneOf(status)): string {
+  return `${SUMMARY_DOT[tone]} ${status ?? ''}`.trimEnd()
+}
 
 /** Output name -> value. Fields the environment does not set become empty strings. */
 export function toOutputs(env: Environment): Record<string, string> {
