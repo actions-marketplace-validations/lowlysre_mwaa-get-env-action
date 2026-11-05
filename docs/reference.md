@@ -1,5 +1,14 @@
 # Reference
 
+<!-- toc -->
+
+- [Inputs](#inputs)
+- [Outputs](#outputs)
+- [Logs, annotations, and failures](#logs-annotations-and-failures)
+- [Design notes](#design-notes)
+
+<!-- tocstop -->
+
 ## Inputs
 
 | Input     | Required | Default                              | Description                                                                                     |

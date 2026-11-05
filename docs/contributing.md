@@ -7,6 +7,16 @@ npm run check
 
 `npm run check` type-checks with `tsc`, runs the tests with the built-in Node test runner, and rebuilds `dist/`. The test run enforces coverage thresholds of 95% for lines and functions and 70% for branches over `src/`, excluding the entry point `src/index.ts`. Run `npm run test:coverage` on its own to see the per-file report.
 
+<!-- toc -->
+
+- [Layout](#layout)
+- [Tests](#tests)
+- [The dist directory](#the-dist-directory)
+- [Docs](#docs)
+- [Workflow security](#workflow-security)
+
+<!-- tocstop -->
+
 ## Layout
 
 | Path                | Purpose                                                         |
@@ -16,7 +26,7 @@ npm run check
 | `src/format.ts`     | Status colors, log and summary dots, and the output mapping.    |
 | `test/main.test.ts` | Tests against a mocked SDK and against a local HTTP server.     |
 | `dist/index.cjs`    | The bundled action that runs on the runner.                     |
-| `scripts/`          | Build script and the third-party license generator.             |
+| `scripts/`          | Build, third-party license, and docs scripts.                   |
 | `.github/linters/`  | MegaLinter, Prettier, cspell, and markdownlint configuration.   |
 | `.github/codeql/`   | CodeQL configuration.                                           |
 
@@ -27,6 +37,10 @@ The tests use `node:test`, and Node 24 runs the TypeScript directly, so there is
 ## The dist directory
 
 The action runs from `dist/index.cjs`, so commit the rebuilt file with source changes. CI rebuilds it and fails when the committed copy is stale.
+
+## Docs
+
+Each page under `docs/` has a table of contents between `<!-- toc -->` and `<!-- tocstop -->`. Run `npm run docs:toc` after changing a `##` heading to regenerate it. `npm run check` runs `npm run docs:check`, which fails on a stale table of contents, a broken relative link or anchor, or an example that passes an input or reads an output `action.yml` doesn't declare.
 
 ## Workflow security
 

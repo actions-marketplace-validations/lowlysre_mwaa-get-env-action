@@ -2,6 +2,16 @@
 
 The credentials in the job need `airflow:GetEnvironment` on the environment, and nothing else.
 
+<!-- toc -->
+
+- [IAM policy](#iam-policy)
+- [Authenticate with GitHub OIDC](#authenticate-with-github-oidc)
+- [Troubleshooting](#troubleshooting)
+
+<!-- tocstop -->
+
+## IAM policy
+
 ```json
 {
   "Version": "2012-10-17",
@@ -16,6 +26,8 @@ The credentials in the job need `airflow:GetEnvironment` on the environment, and
 ```
 
 Use `environment/*` as the resource to read every environment in the account and region.
+
+## Authenticate with GitHub OIDC
 
 Run [aws-actions/configure-aws-credentials](https://github.com/aws-actions/configure-aws-credentials) before the action. It exports the credentials and region that the action reads from the standard AWS provider chain. GitHub OIDC avoids storing long-lived keys as secrets: see the GitHub guide to [OIDC in AWS](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws) for the trust policy.
 
