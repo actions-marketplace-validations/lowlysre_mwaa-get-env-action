@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/public/social-card.png" alt="Get MWAA Environment: a workflow step that reads an Amazon MWAA environment, and the status, Airflow version and S3 outputs it sets" width="720">
+  <img src="docs/public/social-card.png" alt="Get MWAA Environment: a workflow that reads an Amazon MWAA environment, then gates the next step on its status output" width="720">
 </p>
 
 <p align="center">

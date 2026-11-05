@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
   <title id="title">Get MWAA Environment</title>
-  <desc id="desc">Social card: read an Amazon MWAA environment from GitHub Actions. A workflow step on the right, with the outputs it sets below it, such as status AVAILABLE and Airflow version 2.10.3.</desc>
+  <desc id="desc">Social card: read an Amazon MWAA environment from GitHub Actions. A workflow file on the right reads the environment, then gates the next step on its status output.</desc>
   <!-- Palette: the four Apache Airflow pinwheel blades, green, blue, cyan, and red (tones from
        airflow-core/docs/img/logos/wordmark_1.svg), on Airflow's brand-950 navy. -->
   <defs>
@@ -57,13 +57,12 @@
   <text x="80" y="548" font-family="Cascadia Mono" font-size="19" fill="#8fb3c9">lowlysre/mwaa-get-env-action</text>
   <text x="80" y="580" font-family="Segoe UI" font-size="16" fill="#5f7d92">Not affiliated with AWS or the Apache Software Foundation.</text>
 
-  <!-- Right column: two cards, 510 wide at x=690, 20px apart, stack centred vertically.
-       Card header 48px with the label at y=31 (15px). Workflow YAML is 18px, first baseline
-       y=96, 36px pitch. Outputs are 18px, first baseline y=86, 32px pitch, value column x=296
-       with an r=5 status dot at x=281. Each card ends 24px below its last baseline. -->
+  <!-- Right column: one workflow-file card, 510 wide at x=690, centred vertically.
+       Header 48px with the file path at y=31 (15px). YAML is 18px, first baseline y=96,
+       36px pitch. The card ends 24px below its last baseline. -->
   <!-- Workflow file card -->
-  <g transform="translate(690 77)">
-    <rect width="510" height="228" rx="12" fill="#0e2b40" stroke="#1d4f73" stroke-width="1.5"/>
+  <g transform="translate(690 116)">
+    <rect width="510" height="408" rx="12" fill="#0e2b40" stroke="#1d4f73" stroke-width="1.5"/>
     <path d="M0 48H510" stroke="#1d4f73" stroke-width="1.5"/>
     <text x="26" y="31" font-family="Cascadia Mono" font-size="15" fill="#8fb3c9">.github/workflows/deploy.yml</text>
     <g font-family="Cascadia Mono" font-size="18" fill="#8fb3c9" xml:space="preserve">
@@ -71,26 +70,10 @@
       <text x="26" y="132">  <tspan fill="#6cc4ff">uses</tspan>: <tspan fill="#11e1ee">lowlysre/mwaa-get-env-action@v1</tspan></text>
       <text x="26" y="168">  <tspan fill="#6cc4ff">with</tspan>:</text>
       <text x="26" y="204">    <tspan fill="#6cc4ff">name</tspan>: <tspan fill="#7be8a6">my-environment</tspan></text>
+      <text x="26" y="276">- <tspan fill="#6cc4ff">name</tspan>: <tspan fill="#7be8a6">Gate on status</tspan></text>
+      <text x="26" y="312">  <tspan fill="#6cc4ff">if</tspan>: &gt;-</text>
+      <text x="26" y="348">    <tspan fill="#7be8a6">steps.mwaa.outputs.status != 'AVAILABLE'</tspan></text>
+      <text x="26" y="384">  <tspan fill="#6cc4ff">run</tspan>: <tspan fill="#7be8a6">exit 1</tspan></text>
     </g>
   </g>
-
-  <!-- Outputs card -->
-  <g transform="translate(690 325)">
-    <rect width="510" height="238" rx="12" fill="#0e2b40" stroke="#1d4f73" stroke-width="1.5"/>
-    <path d="M0 48H510" stroke="#1d4f73" stroke-width="1.5"/>
-    <text x="26" y="31" font-family="Cascadia Mono" font-size="15" fill="#8fb3c9">steps.mwaa.outputs</text>
-    <g font-family="Cascadia Mono" font-size="18" fill="#8fb3c9">
-      <text x="26" y="86">status</text>
-      <circle cx="281" cy="80" r="5" fill="#04d659"/>
-      <text x="296" y="86" fill="#7be8a6">AVAILABLE</text>
-      <text x="26" y="118">last-update-status</text>
-      <circle cx="281" cy="112" r="5" fill="#04d659"/>
-      <text x="296" y="118" fill="#7be8a6">SUCCESS</text>
-      <text x="26" y="150">airflow-version</text>
-      <text x="296" y="150" fill="#e6f0f7">2.10.3</text>
-      <text x="26" y="182">environment-class</text>
-      <text x="296" y="182" fill="#e6f0f7">mw1.small</text>
-      <text x="26" y="214">dag-s3-path</text>
-      <text x="296" y="214" fill="#e6f0f7">dags</text>
-    </g>
-  </g></svg>
+</svg>
