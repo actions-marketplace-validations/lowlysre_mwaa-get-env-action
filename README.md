@@ -36,7 +36,7 @@ steps:
 
 The action takes the region and credentials from the AWS environment configured by the preceding step. Pin third-party actions to full commit SHAs in production workflows.
 
-## What you get
+## Outputs
 
 | Output                                                                 | Description                                           |
 | ---------------------------------------------------------------------- | ----------------------------------------------------- |
