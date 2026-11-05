@@ -1,0 +1,8 @@
+mwaa-get-env-action
+Copyright 2026 lowlysre
+
+Built and maintained by lowlysre (https://github.com/lowlysre). This product is an independent project and is not affiliated with or endorsed by Amazon Web Services.
+
+Third-party code bundled into dist/index.cjs, including the AWS SDK for JavaScript v3 (Apache License 2.0, Copyright Amazon.com, Inc. or its affiliates) and the GitHub Actions toolkit (MIT, Copyright GitHub), is listed, with each license and NOTICE, in dist/THIRD_PARTY_LICENSES.txt.
+
+AWS, Amazon MWAA, and Amazon Managed Workflows for Apache Airflow are trademarks of Amazon.com, Inc. or its affiliates. Apache Airflow is a trademark of the Apache Software Foundation.

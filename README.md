@@ -1,22 +1,29 @@
-# mwaa-get-env-action
+<p align="center">
+  <a href="https://github.com/lowlysre/mwaa-get-env-action/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/lowlysre/mwaa-get-env-action/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/github/license/lowlysre/mwaa-get-env-action"></a>
+</p>
 
-Gets the details of an Amazon MWAA environment (the `GetEnvironment` API, same data as `aws mwaa get-environment`) and exposes them as step outputs, log groups, and a job summary. It uses the AWS credentials already in the job environment, so no MWAA CLI or web login tokens are involved.
+# Get Amazon MWAA Environment
 
-The step fails with a clear error when the environment does not exist, which makes it usable as an existence check.
+Get the details of an Amazon MWAA environment in GitHub Actions: status, Airflow version, environment class, web server URL, and the S3 paths and object versions of its requirements, plugins, and startup script. It calls the `GetEnvironment` API (the same data as `aws mwaa get-environment`) with the AWS credentials already in your job, so there are no MWAA CLI or web login tokens to manage.
 
-## Usage
+The step fails with a clear error when the environment doesn't exist, so it doubles as an existence check. Every run also writes a color-coded log, a job summary, and warning annotations for unhealthy environments.
 
-Run [aws-actions/configure-aws-credentials](https://github.com/aws-actions/configure-aws-credentials) first, then this action:
+This action is built and maintained by [lowlysre](https://github.com/lowlysre). It's an independent project, not affiliated with or endorsed by AWS.
+
+## Quick start
+
+This example assumes the repository can use GitHub OIDC to assume an AWS role with `airflow:GetEnvironment`. See [permissions](docs/how-to/permissions.md) for the policy and trust setup.
 
 ```yaml
 permissions:
-  id-token: write
   contents: read
+  id-token: write
 
 steps:
   - uses: aws-actions/configure-aws-credentials@v6
     with:
-      role-to-assume: arn:aws:iam::123456789012:role/mwaa-ci
+      role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
       aws-region: us-east-1
 
   - id: mwaa
@@ -27,73 +34,45 @@ steps:
   - run: echo "Airflow ${{ steps.mwaa.outputs.airflow_version }} is ${{ steps.mwaa.outputs.status }}"
 ```
 
-The action runs on Node 24 and bundles the AWS SDK, so the runner needs neither the AWS CLI nor `jq`.
+The action takes the region and credentials from the AWS environment configured by the preceding step. Pin third-party actions to full commit SHAs in production workflows.
 
-## Inputs
+## What you get
 
-| Input | Required | Default | Description |
-|---|---|---|---|
-| `name` | yes | | Name of the MWAA environment. |
-| `region` | no | `AWS_REGION` or `AWS_DEFAULT_REGION` | AWS region. |
-| `summary` | no | `true` | Write an environment summary to the job summary page. |
+| Output                                                                 | Description                                           |
+| ---------------------------------------------------------------------- | ----------------------------------------------------- |
+| `status`, `last_update_status`                                         | Environment status and the status of its last update. |
+| `arn`, `airflow_version`, `environment_class`, `webserver_url`         | Identity and sizing.                                  |
+| `source_bucket_arn`, `dag_s3_path`                                     | Where DAGs live.                                      |
+| `requirements_s3_path`, `plugins_s3_path`, `startup_script_s3_path`    | S3 paths of the supporting files.                     |
+| `requirements_s3_object_version`, `plugins_s3_object_version`, `startup_script_s3_object_version` | S3 version IDs the environment runs. |
+| `json`                                                                 | The full `Environment` object, for anything else.     |
 
-## Outputs
+Fields the environment doesn't set are empty strings. See [inputs, outputs, and errors](docs/reference/inputs-and-outputs.md) for every field and failure message.
 
-Fields the environment does not set are returned as empty strings.
+## Action or the AWS CLI
 
-| Output | Source field |
-|---|---|
-| `name` | `Name` |
-| `status` | `Status` |
-| `arn` | `Arn` |
-| `airflow_version` | `AirflowVersion` |
-| `environment_class` | `EnvironmentClass` |
-| `webserver_url` | `WebserverUrl` |
-| `source_bucket_arn` | `SourceBucketArn` |
-| `dag_s3_path` | `DagS3Path` |
-| `requirements_s3_path` | `RequirementsS3Path` |
-| `requirements_s3_object_version` | `RequirementsS3ObjectVersion` |
-| `plugins_s3_path` | `PluginsS3Path` |
-| `plugins_s3_object_version` | `PluginsS3ObjectVersion` |
-| `startup_script_s3_path` | `StartupScriptS3Path` |
-| `startup_script_s3_object_version` | `StartupScriptS3ObjectVersion` |
-| `last_update_status` | `LastUpdate.Status` |
-| `json` | The full `Environment` object as JSON |
+`aws mwaa get-environment` works in a workflow too. The action wraps the same API for the parts that are tedious in shell.
 
-Parse `json` with `fromJSON` for anything not listed, for example `fromJSON(steps.mwaa.outputs.json).NetworkConfiguration`. Timestamps in `json` are ISO 8601 strings.
+| Need                                                  | This action                                | AWS CLI                                         |
+| ----------------------------------------------------- | ------------------------------------------ | ----------------------------------------------- |
+| Outputs usable in later steps                         | ✅ Built in                                | Parse JSON with `jq` yourself                   |
+| Clear failure when the environment doesn't exist      | ✅ One readable message                    | Match stderr text, which varies by CLI version  |
+| Works without the AWS CLI or `jq` on the runner       | ✅ SDK bundled                             | ❌                                              |
+| Log groups, job summary, and failure annotations      | ✅                                         | ❌                                              |
+| Update or create an environment                       | ❌ See [mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action) | ✅ |
 
-The output names are snake_case versions of the API field names. [mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action) should reuse them.
+See [why an action instead of the AWS CLI](docs/explanation/design.md) for the reasoning.
 
-## Logs and annotations
+## Documentation
 
-- The log shows the environment, a color-coded status, and collapsed groups for the details and the raw JSON.
-- The job summary lists the key properties and the raw JSON, unless `summary` is `false`.
-- A warning annotation is added when the status is `CREATE_FAILED`, `UPDATE_FAILED`, `UNAVAILABLE`, or `DELETED`, or when the last update failed. These do not fail the step, so you can decide what to do with `status` and `last_update_status`.
-
-## Permissions
-
-The IAM principal needs `airflow:GetEnvironment` on the environment.
-
-## Errors
-
-The step fails, with an error annotation, when:
-
-- The environment does not exist: `MWAA environment '<name>' was not found in region <region>.`
-- The credentials lack permission: the message names `airflow:GetEnvironment`.
-- The name is not a valid MWAA environment name, or no region can be determined.
-- Any other AWS error occurs, such as throttling: the message includes the error name and text.
-
-## Development
-
-```sh
-npm ci
-npm run check
-```
-
-`npm run check` type-checks, runs the tests with the built-in Node test runner, and rebuilds `dist/`. Commit the rebuilt `dist/index.cjs`: the action runs from it, and CI fails when it is stale.
-
-The tests cover the action against a mocked SDK client and against the real SDK pointed at a local HTTP server, so error deserialization is exercised too.
+- [Inputs, outputs, and errors](docs/reference/inputs-and-outputs.md)
+- [Permissions and authentication](docs/how-to/permissions.md)
+- [Recipes](docs/how-to/recipes.md): existence checks, gating deploys, detecting S3 drift
+- [Why an action instead of the AWS CLI](docs/explanation/design.md)
+- [Contributing](docs/contributing.md)
 
 ## License
 
-[MIT](LICENSE)
+Copyright 2026 lowlysre. This action is licensed under the [MIT License](LICENSE); see [NOTICE](NOTICE) for attribution. Third-party code bundled into the action, including the AWS SDK for JavaScript v3 (Apache-2.0), is listed with each license and NOTICE in [dist/THIRD_PARTY_LICENSES.txt](dist/THIRD_PARTY_LICENSES.txt).
+
+AWS, Amazon MWAA, and Amazon Managed Workflows for Apache Airflow are trademarks of Amazon.com, Inc. or its affiliates. This project is independent and not affiliated with or endorsed by AWS.
