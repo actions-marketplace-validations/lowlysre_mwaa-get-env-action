@@ -25,7 +25,9 @@ export async function run(inputs: Inputs, client?: Pick<MWAAClient, 'send'>): Pr
   const { name, region } = inputs
 
   if (!NAME_PATTERN.test(name)) {
-    core.setFailed(`Invalid environment name '${name}': it must start with a letter, contain only letters, digits, '-' or '_', and be at most 80 characters.`)
+    core.setFailed(
+      `Invalid environment name '${name}': it must start with a letter, contain only letters, digits, '-' or '_', and be at most 80 characters.`
+    )
     return
   }
   if (!region) {
@@ -46,7 +48,9 @@ export async function run(inputs: Inputs, client?: Pick<MWAAClient, 'send'>): Pr
         core.setFailed(`MWAA environment '${name}' was not found in region ${region}.`)
         break
       case 'AccessDeniedException':
-        core.setFailed(`Access denied calling airflow:GetEnvironment for '${name}' in ${region}. Check the IAM permissions of the credentials in use. ${errMessage(err)}`)
+        core.setFailed(
+          `Access denied calling airflow:GetEnvironment for '${name}' in ${region}. Check the IAM permissions of the credentials in use. ${errMessage(err)}`
+        )
         break
       default:
         core.setFailed(`GetEnvironment failed for '${name}' in ${region}: ${errName(err)}: ${errMessage(err)}`)
@@ -85,14 +89,26 @@ export async function run(inputs: Inputs, client?: Pick<MWAAClient, 'send'>): Pr
   if (inputs.summary) await writeSummary(name, region, health, outputs, environment)
 }
 
-async function writeSummary(name: string, region: string, health: Health, o: Record<string, string>, environment: Environment): Promise<void> {
+async function writeSummary(
+  name: string,
+  region: string,
+  health: Health,
+  o: Record<string, string>,
+  environment: Environment
+): Promise<void> {
   const code = (v: string) => (v ? `<code>${v}</code>` : '–')
   const withVersion = (path: string, version: string) => [path, version].filter(Boolean).join(' @ ')
   await core.summary
     .addHeading(`${icon(health)} MWAA environment ${name}`, 2)
-    .addRaw(`Region <code>${region}</code> · status <b>${o.status || 'UNKNOWN'}</b> · last update <b>${o.last_update_status || 'n/a'}</b>`, true)
+    .addRaw(
+      `Region <code>${region}</code> · status <b>${o.status || 'UNKNOWN'}</b> · last update <b>${o.last_update_status || 'n/a'}</b>`,
+      true
+    )
     .addTable([
-      [{ data: 'Property', header: true }, { data: 'Value', header: true }],
+      [
+        { data: 'Property', header: true },
+        { data: 'Value', header: true }
+      ],
       ['Airflow version', code(o.airflow_version ?? '')],
       ['Environment class', code(o.environment_class ?? '')],
       ['Webserver URL', code(o.webserver_url ?? '')],

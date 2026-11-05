@@ -178,7 +178,11 @@ describe('run with a mocked SDK', () => {
 
   it('annotates unhealthy environments and failed updates without failing the step', async () => {
     sdk.on(GetEnvironmentCommand).resolves({
-      Environment: { ...full, Status: 'UPDATE_FAILED', LastUpdate: { Status: 'FAILED', Error: { ErrorCode: '5000', ErrorMessage: 'bad requirements' } } }
+      Environment: {
+        ...full,
+        Status: 'UPDATE_FAILED',
+        LastUpdate: { Status: 'FAILED', Error: { ErrorCode: '5000', ErrorMessage: 'bad requirements' } }
+      }
     })
     await run(inputs(), sdkClient())
     assert.equal(process.exitCode, undefined)

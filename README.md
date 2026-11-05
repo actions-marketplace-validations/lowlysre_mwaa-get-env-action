@@ -38,14 +38,14 @@ The action takes the region and credentials from the AWS environment configured 
 
 ## Outputs
 
-| Output                                                                 | Description                                           |
-| ---------------------------------------------------------------------- | ----------------------------------------------------- |
-| `status`, `last_update_status`                                         | Environment status and the status of its last update. |
-| `arn`, `airflow_version`, `environment_class`, `webserver_url`         | Identity and sizing.                                  |
-| `source_bucket_arn`, `dag_s3_path`                                     | Where DAGs live.                                      |
-| `requirements_s3_path`, `plugins_s3_path`, `startup_script_s3_path`    | S3 paths of the supporting files.                     |
-| `requirements_s3_object_version`, `plugins_s3_object_version`, `startup_script_s3_object_version` | S3 version IDs the environment runs. |
-| `json`                                                                 | The full `Environment` object, for anything else.     |
+| Output                                                                                            | Description                                           |
+| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `status`, `last_update_status`                                                                    | Environment status and the status of its last update. |
+| `arn`, `airflow_version`, `environment_class`, `webserver_url`                                    | Identity and sizing.                                  |
+| `source_bucket_arn`, `dag_s3_path`                                                                | Where DAGs live.                                      |
+| `requirements_s3_path`, `plugins_s3_path`, `startup_script_s3_path`                               | S3 paths of the supporting files.                     |
+| `requirements_s3_object_version`, `plugins_s3_object_version`, `startup_script_s3_object_version` | S3 version IDs the environment runs.                  |
+| `json`                                                                                            | The full `Environment` object, for anything else.     |
 
 Fields the environment doesn't set are empty strings. See [inputs, outputs, and errors](docs/reference/inputs-and-outputs.md) for every field and failure message.
 
@@ -53,13 +53,13 @@ Fields the environment doesn't set are empty strings. See [inputs, outputs, and 
 
 `aws mwaa get-environment` works in a workflow too. The action wraps the same API for the parts that are tedious in shell.
 
-| Need                                                  | This action                                | AWS CLI                                         |
-| ----------------------------------------------------- | ------------------------------------------ | ----------------------------------------------- |
-| Outputs usable in later steps                         | ✅ Built in                                | Parse JSON with `jq` yourself                   |
-| Clear failure when the environment doesn't exist      | ✅ One readable message                    | Match stderr text, which varies by CLI version  |
-| Works without the AWS CLI or `jq` on the runner       | ✅ SDK bundled                             | ❌                                              |
-| Log groups, job summary, and failure annotations      | ✅                                         | ❌                                              |
-| Update or create an environment                       | ❌ See [mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action) | ✅ |
+| Need                                             | This action                                                                         | AWS CLI                                        |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Outputs usable in later steps                    | ✅ Built in                                                                         | Parse JSON with `jq` yourself                  |
+| Clear failure when the environment doesn't exist | ✅ One readable message                                                             | Match stderr text, which varies by CLI version |
+| Works without the AWS CLI or `jq` on the runner  | ✅ SDK bundled                                                                      | ❌                                             |
+| Log groups, job summary, and failure annotations | ✅                                                                                  | ❌                                             |
+| Update or create an environment                  | ❌ See [mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action) | ✅                                             |
 
 See [why an action instead of the AWS CLI](docs/explanation/design.md) for the reasoning.
 

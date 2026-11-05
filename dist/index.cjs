@@ -48843,7 +48843,15 @@ function classify(status) {
   if (status && FAILED.has(status)) return "failed";
   return "transitioning";
 }
-var ANSI = { reset: "\x1B[0m", bold: "\x1B[1m", dim: "\x1B[2m", red: "\x1B[31m", green: "\x1B[32m", yellow: "\x1B[33m", cyan: "\x1B[36m" };
+var ANSI = {
+  reset: "\x1B[0m",
+  bold: "\x1B[1m",
+  dim: "\x1B[2m",
+  red: "\x1B[31m",
+  green: "\x1B[32m",
+  yellow: "\x1B[33m",
+  cyan: "\x1B[36m"
+};
 var paint = {
   bold: (s2) => `${ANSI.bold}${s2}${ANSI.reset}`,
   dim: (s2) => `${ANSI.dim}${s2}${ANSI.reset}`,
@@ -48889,7 +48897,9 @@ var errMessage = (err) => err?.message ?? String(err);
 async function run(inputs, client) {
   const { name, region } = inputs;
   if (!NAME_PATTERN.test(name)) {
-    setFailed(`Invalid environment name '${name}': it must start with a letter, contain only letters, digits, '-' or '_', and be at most 80 characters.`);
+    setFailed(
+      `Invalid environment name '${name}': it must start with a letter, contain only letters, digits, '-' or '_', and be at most 80 characters.`
+    );
     return;
   }
   if (!region) {
@@ -48908,7 +48918,9 @@ async function run(inputs, client) {
         setFailed(`MWAA environment '${name}' was not found in region ${region}.`);
         break;
       case "AccessDeniedException":
-        setFailed(`Access denied calling airflow:GetEnvironment for '${name}' in ${region}. Check the IAM permissions of the credentials in use. ${errMessage(err)}`);
+        setFailed(
+          `Access denied calling airflow:GetEnvironment for '${name}' in ${region}. Check the IAM permissions of the credentials in use. ${errMessage(err)}`
+        );
         break;
       default:
         setFailed(`GetEnvironment failed for '${name}' in ${region}: ${errName(err)}: ${errMessage(err)}`);
@@ -48944,8 +48956,14 @@ async function run(inputs, client) {
 async function writeSummary(name, region, health, o3, environment) {
   const code = (v) => v ? `<code>${v}</code>` : "\u2013";
   const withVersion = (path, version) => [path, version].filter(Boolean).join(" @ ");
-  await summary.addHeading(`${icon(health)} MWAA environment ${name}`, 2).addRaw(`Region <code>${region}</code> \xB7 status <b>${o3.status || "UNKNOWN"}</b> \xB7 last update <b>${o3.last_update_status || "n/a"}</b>`, true).addTable([
-    [{ data: "Property", header: true }, { data: "Value", header: true }],
+  await summary.addHeading(`${icon(health)} MWAA environment ${name}`, 2).addRaw(
+    `Region <code>${region}</code> \xB7 status <b>${o3.status || "UNKNOWN"}</b> \xB7 last update <b>${o3.last_update_status || "n/a"}</b>`,
+    true
+  ).addTable([
+    [
+      { data: "Property", header: true },
+      { data: "Value", header: true }
+    ],
     ["Airflow version", code(o3.airflow_version ?? "")],
     ["Environment class", code(o3.environment_class ?? "")],
     ["Webserver URL", code(o3.webserver_url ?? "")],

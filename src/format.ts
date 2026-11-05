@@ -10,7 +10,15 @@ export function classify(status: string | undefined): Health {
   return 'transitioning'
 }
 
-const ANSI = { reset: '\u001b[0m', bold: '\u001b[1m', dim: '\u001b[2m', red: '\u001b[31m', green: '\u001b[32m', yellow: '\u001b[33m', cyan: '\u001b[36m' }
+const ANSI = {
+  reset: '\u001b[0m',
+  bold: '\u001b[1m',
+  dim: '\u001b[2m',
+  red: '\u001b[31m',
+  green: '\u001b[32m',
+  yellow: '\u001b[33m',
+  cyan: '\u001b[36m'
+}
 
 export const paint = {
   bold: (s: string) => `${ANSI.bold}${s}${ANSI.reset}`,
