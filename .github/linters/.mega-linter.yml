@@ -14,9 +14,12 @@ JAVASCRIPT_DEFAULT_STYLE: prettier
 # Generated files.
 FILTER_REGEX_EXCLUDE: (dist/|node_modules/|package-lock\.json)
 
+# Checks relative links and #anchors across the docs without network access. Remote URLs are
+# skipped because the egress policy blocks them.
+SPELL_LYCHEE_ARGUMENTS: --offline --include-fragments
+
 # The egress policy blocks everything except the endpoints listed in the workflow, so linters
-# that download data at run time (vulnerability databases, link checks) stay off. zizmor runs
-# as its own CI job.
+# that download data at run time (vulnerability databases) stay off. zizmor runs as its own CI job.
 DISABLE_LINTERS:
   - ACTION_ZIZMOR
   - TYPESCRIPT_STANDARD
@@ -27,4 +30,3 @@ DISABLE_LINTERS:
   - REPOSITORY_OSV_SCANNER
   - REPOSITORY_CHECKOV
   - COPYPASTE_JSCPD
-  - SPELL_LYCHEE

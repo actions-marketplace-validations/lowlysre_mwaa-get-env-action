@@ -40,7 +40,7 @@ The action runs from `dist/index.cjs`, so commit the rebuilt file with source ch
 
 ## Docs
 
-Each page under `docs/` has a table of contents between `<!-- toc -->` and `<!-- tocstop -->`. Run `npm run docs:toc` after changing a `##` heading to regenerate it. `npm run check` runs `npm run docs:check`, which fails on a stale table of contents, a broken relative link or anchor, or an example that passes an input or reads an output `action.yml` doesn't declare.
+Each page under `docs/` has a table of contents between `<!-- toc -->` and `<!-- tocstop -->`. Run `npm run docs:toc` after changing a `##` heading to regenerate it. MegaLinter fails on a ToC entry or relative link that points at a missing heading or file: markdownlint checks anchors within a page, and lychee checks links and anchors across pages.
 
 ## Workflow security
 

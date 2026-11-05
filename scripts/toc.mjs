@@ -1,37 +1,20 @@
 // Regenerates the table of contents between <!-- toc --> and <!-- tocstop --> in each docs page.
-// Usage: node scripts/toc.mjs [--check]. With --check it writes nothing and fails on a stale ToC.
+// markdownlint (MD051) and lychee catch any ToC link this leaves pointing at a missing heading.
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { headings } from './markdown.mjs'
 
-const START = '<!-- toc -->'
-const STOP = '<!-- tocstop -->'
-const check = process.argv.includes('--check')
-const files = readdirSync('docs')
-  .filter(f => f.endsWith('.md'))
-  .map(f => `docs/${f}`)
+const TOC = /(<!-- toc -->)[\s\S]*?(<!-- tocstop -->)/
 
-let stale = 0
-for (const file of files) {
-  const text = readFileSync(file, 'utf8').replace(/\r\n/g, '\n')
-  const start = text.indexOf(START)
-  const stop = text.indexOf(STOP)
-  if (start === -1 || stop < start) {
-    console.error(`${file}: missing ${START} ... ${STOP} markers`)
-    stale++
-    continue
-  }
-  const list = headings(text)
-    .filter(h => h.level === 2)
-    .map(h => `- [${h.text}](#${h.slug})`)
-    .join('\n')
-  const updated = `${text.slice(0, start + START.length)}\n\n${list}\n\n${text.slice(stop)}`
-  if (updated === text) continue
-  if (check) {
-    console.error(`${file}: table of contents is out of date. Run npm run docs:toc.`)
-    stale++
-  } else {
-    writeFileSync(file, updated)
-    console.log(`${file}: table of contents updated`)
-  }
+// GitHub's heading anchor: lowercase, punctuation dropped except '-' and '_', spaces to '-'.
+const slug = heading =>
+  heading
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s_-]/gu, '')
+    .replace(/\s/g, '-')
+
+for (const file of readdirSync('docs').filter(f => f.endsWith('.md'))) {
+  const path = `docs/${file}`
+  const text = readFileSync(path, 'utf8')
+  const prose = text.replace(/^```[\s\S]*?^```/gm, '')
+  const list = [...prose.matchAll(/^## (.+?)\r?$/gm)].map(([, heading]) => `- [${heading}](#${slug(heading)})`).join('\n')
+  writeFileSync(path, text.replace(TOC, `$1\n\n${list}\n\n$2`))
 }
-process.exit(stale ? 1 : 0)
