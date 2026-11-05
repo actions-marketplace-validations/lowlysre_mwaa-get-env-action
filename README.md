@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="docs/public/social-card.svg" alt="Get Amazon MWAA Environment: read MWAA status, versions, and S3 paths from GitHub Actions" width="720">
+</p>
+
+<p align="center">
   <a href="https://github.com/lowlysre/mwaa-get-env-action/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/lowlysre/mwaa-get-env-action/actions/workflows/ci.yml/badge.svg"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/github/license/lowlysre/mwaa-get-env-action"></a>
 </p>
@@ -31,7 +35,7 @@ steps:
     with:
       name: my-environment
 
-  - run: echo "Airflow ${{ steps.mwaa.outputs.airflow_version }} is ${{ steps.mwaa.outputs.status }}"
+  - run: echo "Airflow ${{ steps.mwaa.outputs.airflow-version }} is ${{ steps.mwaa.outputs.status }}"
 ```
 
 The action takes the region and credentials from the AWS environment configured by the preceding step. Pin third-party actions to full commit SHAs in production workflows.
@@ -40,11 +44,11 @@ The action takes the region and credentials from the AWS environment configured 
 
 | Output                                                                                            | Description                                           |
 | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `status`, `last_update_status`                                                                    | Environment status and the status of its last update. |
-| `arn`, `airflow_version`, `environment_class`, `webserver_url`                                    | Identity and sizing.                                  |
-| `source_bucket_arn`, `dag_s3_path`                                                                | Where DAGs live.                                      |
-| `requirements_s3_path`, `plugins_s3_path`, `startup_script_s3_path`                               | S3 paths of the supporting files.                     |
-| `requirements_s3_object_version`, `plugins_s3_object_version`, `startup_script_s3_object_version` | S3 version IDs the environment runs.                  |
+| `status`, `last-update-status`                                                                    | Environment status and the status of its last update. |
+| `environment-arn`, `airflow-version`, `environment-class`, `webserver-url`                        | Identity and sizing.                                  |
+| `source-bucket-arn`, `dag-s3-path`                                                                | Where DAGs live.                                      |
+| `requirements-s3-path`, `plugins-s3-path`, `startup-script-s3-path`                               | S3 paths of the supporting files.                     |
+| `requirements-s3-object-version`, `plugins-s3-object-version`, `startup-script-s3-object-version` | S3 version IDs the environment runs.                  |
 | `json`                                                                                            | The full `Environment` object, for anything else.     |
 
 Fields the environment doesn't set are empty strings. See [inputs, outputs, and errors](docs/reference/inputs-and-outputs.md) for every field and failure message.
@@ -63,11 +67,16 @@ Fields the environment doesn't set are empty strings. See [inputs, outputs, and 
 
 See [why an action instead of the AWS CLI](docs/explanation/design.md) for the reasoning.
 
+## Related actions
+
+[mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action) updates an environment (`aws mwaa update-environment`) and can wait until it is `AVAILABLE` again. The two share input and output names, so a typical pipeline reads the environment with this action, updates it, then reads it again to confirm. See [update an environment and verify it](docs/how-to/update-and-verify.md) for a complete workflow.
+
 ## Documentation
 
 - [Inputs, outputs, and errors](docs/reference/inputs-and-outputs.md)
 - [Permissions and authentication](docs/how-to/permissions.md)
 - [Recipes](docs/how-to/recipes.md): existence checks, gating deploys, detecting S3 drift
+- [Update an environment and verify it](docs/how-to/update-and-verify.md)
 - [Why an action instead of the AWS CLI](docs/explanation/design.md)
 - [Contributing](docs/contributing.md)
 

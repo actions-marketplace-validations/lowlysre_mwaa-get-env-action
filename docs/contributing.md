@@ -16,6 +16,8 @@ npm run check
 | `src/format.ts`     | Status classification, colors, and the output mapping.          |
 | `test/main.test.ts` | Tests against a mocked SDK and against a local HTTP server.     |
 | `dist/index.cjs`    | The bundled action that runs on the runner.                     |
+| `scripts/`          | Build script and the third-party license generator.             |
+| `.github/linters/`  | MegaLinter, Prettier, cspell, and markdownlint configuration.   |
 
 ## Tests
 

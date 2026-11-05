@@ -48867,19 +48867,19 @@ function toOutputs(env2) {
   return {
     name: s2(env2.Name),
     status: s2(env2.Status),
-    arn: s2(env2.Arn),
-    airflow_version: s2(env2.AirflowVersion),
-    environment_class: s2(env2.EnvironmentClass),
-    webserver_url: s2(env2.WebserverUrl),
-    source_bucket_arn: s2(env2.SourceBucketArn),
-    dag_s3_path: s2(env2.DagS3Path),
-    requirements_s3_path: s2(env2.RequirementsS3Path),
-    requirements_s3_object_version: s2(env2.RequirementsS3ObjectVersion),
-    plugins_s3_path: s2(env2.PluginsS3Path),
-    plugins_s3_object_version: s2(env2.PluginsS3ObjectVersion),
-    startup_script_s3_path: s2(env2.StartupScriptS3Path),
-    startup_script_s3_object_version: s2(env2.StartupScriptS3ObjectVersion),
-    last_update_status: s2(env2.LastUpdate?.Status)
+    "environment-arn": s2(env2.Arn),
+    "airflow-version": s2(env2.AirflowVersion),
+    "environment-class": s2(env2.EnvironmentClass),
+    "webserver-url": s2(env2.WebserverUrl),
+    "source-bucket-arn": s2(env2.SourceBucketArn),
+    "dag-s3-path": s2(env2.DagS3Path),
+    "requirements-s3-path": s2(env2.RequirementsS3Path),
+    "requirements-s3-object-version": s2(env2.RequirementsS3ObjectVersion),
+    "plugins-s3-path": s2(env2.PluginsS3Path),
+    "plugins-s3-object-version": s2(env2.PluginsS3ObjectVersion),
+    "startup-script-s3-path": s2(env2.StartupScriptS3Path),
+    "startup-script-s3-object-version": s2(env2.StartupScriptS3ObjectVersion),
+    "last-update-status": s2(env2.LastUpdate?.Status)
   };
 }
 
@@ -48947,7 +48947,7 @@ async function run(inputs, client) {
   info(JSON.stringify(environment, null, 2));
   endGroup();
   if (health === "failed") warning(`MWAA environment '${name}' is ${status}.`, { title: "Unhealthy MWAA environment" });
-  if (outputs.last_update_status === "FAILED") {
+  if (outputs["last-update-status"] === "FAILED") {
     const e5 = environment.LastUpdate?.Error;
     warning(`The last update of '${name}' failed${e5 ? `: ${e5.ErrorCode}: ${e5.ErrorMessage}` : "."}`, { title: "MWAA update failed" });
   }
@@ -48957,22 +48957,22 @@ async function writeSummary(name, region, health, o3, environment) {
   const code = (v) => v ? `<code>${v}</code>` : "\u2013";
   const withVersion = (path, version) => [path, version].filter(Boolean).join(" @ ");
   await summary.addHeading(`${icon(health)} MWAA environment ${name}`, 2).addRaw(
-    `Region <code>${region}</code> \xB7 status <b>${o3.status || "UNKNOWN"}</b> \xB7 last update <b>${o3.last_update_status || "n/a"}</b>`,
+    `Region <code>${region}</code> \xB7 status <b>${o3.status || "UNKNOWN"}</b> \xB7 last update <b>${o3["last-update-status"] || "n/a"}</b>`,
     true
   ).addTable([
     [
       { data: "Property", header: true },
       { data: "Value", header: true }
     ],
-    ["Airflow version", code(o3.airflow_version ?? "")],
-    ["Environment class", code(o3.environment_class ?? "")],
-    ["Webserver URL", code(o3.webserver_url ?? "")],
-    ["ARN", code(o3.arn ?? "")],
-    ["Source bucket", code(o3.source_bucket_arn ?? "")],
-    ["DAGs path", code(o3.dag_s3_path ?? "")],
-    ["requirements.txt", code(withVersion(o3.requirements_s3_path ?? "", o3.requirements_s3_object_version ?? ""))],
-    ["plugins.zip", code(withVersion(o3.plugins_s3_path ?? "", o3.plugins_s3_object_version ?? ""))],
-    ["Startup script", code(withVersion(o3.startup_script_s3_path ?? "", o3.startup_script_s3_object_version ?? ""))]
+    ["Airflow version", code(o3["airflow-version"] ?? "")],
+    ["Environment class", code(o3["environment-class"] ?? "")],
+    ["Webserver URL", code(o3["webserver-url"] ?? "")],
+    ["ARN", code(o3["environment-arn"] ?? "")],
+    ["Source bucket", code(o3["source-bucket-arn"] ?? "")],
+    ["DAGs path", code(o3["dag-s3-path"] ?? "")],
+    ["requirements.txt", code(withVersion(o3["requirements-s3-path"] ?? "", o3["requirements-s3-object-version"] ?? ""))],
+    ["plugins.zip", code(withVersion(o3["plugins-s3-path"] ?? "", o3["plugins-s3-object-version"] ?? ""))],
+    ["Startup script", code(withVersion(o3["startup-script-s3-path"] ?? "", o3["startup-script-s3-object-version"] ?? ""))]
   ]).addDetails("Raw JSON", `<pre>${JSON.stringify(environment, null, 2).replace(/&/g, "&amp;").replace(/</g, "&lt;")}</pre>`).write();
 }
 

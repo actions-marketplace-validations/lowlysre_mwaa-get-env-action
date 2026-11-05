@@ -23,31 +23,31 @@ outputs:
     description: 'Environment name.'
   status:
     description: 'Environment status (for example AVAILABLE or UPDATING).'
-  arn:
+  environment-arn:
     description: 'Environment ARN.'
-  airflow_version:
+  airflow-version:
     description: 'Apache Airflow version.'
-  environment_class:
+  environment-class:
     description: 'Environment class (for example mw1.small).'
-  webserver_url:
+  webserver-url:
     description: 'Airflow web server hostname.'
-  source_bucket_arn:
+  source-bucket-arn:
     description: 'ARN of the S3 bucket holding DAGs and supporting files.'
-  dag_s3_path:
+  dag-s3-path:
     description: 'Relative S3 path of the DAGs folder.'
-  requirements_s3_path:
+  requirements-s3-path:
     description: 'Relative S3 path of requirements.txt.'
-  requirements_s3_object_version:
+  requirements-s3-object-version:
     description: 'S3 object version of requirements.txt.'
-  plugins_s3_path:
+  plugins-s3-path:
     description: 'Relative S3 path of plugins.zip.'
-  plugins_s3_object_version:
+  plugins-s3-object-version:
     description: 'S3 object version of plugins.zip.'
-  startup_script_s3_path:
+  startup-script-s3-path:
     description: 'Relative S3 path of the startup script.'
-  startup_script_s3_object_version:
+  startup-script-s3-object-version:
     description: 'S3 object version of the startup script.'
-  last_update_status:
+  last-update-status:
     description: 'Status of the last update (SUCCESS, PENDING, FAILED).'
   json:
     description: 'Raw JSON of the Environment object.'

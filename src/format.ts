@@ -38,18 +38,18 @@ export function toOutputs(env: Environment): Record<string, string> {
   return {
     name: s(env.Name),
     status: s(env.Status),
-    arn: s(env.Arn),
-    airflow_version: s(env.AirflowVersion),
-    environment_class: s(env.EnvironmentClass),
-    webserver_url: s(env.WebserverUrl),
-    source_bucket_arn: s(env.SourceBucketArn),
-    dag_s3_path: s(env.DagS3Path),
-    requirements_s3_path: s(env.RequirementsS3Path),
-    requirements_s3_object_version: s(env.RequirementsS3ObjectVersion),
-    plugins_s3_path: s(env.PluginsS3Path),
-    plugins_s3_object_version: s(env.PluginsS3ObjectVersion),
-    startup_script_s3_path: s(env.StartupScriptS3Path),
-    startup_script_s3_object_version: s(env.StartupScriptS3ObjectVersion),
-    last_update_status: s(env.LastUpdate?.Status)
+    'environment-arn': s(env.Arn),
+    'airflow-version': s(env.AirflowVersion),
+    'environment-class': s(env.EnvironmentClass),
+    'webserver-url': s(env.WebserverUrl),
+    'source-bucket-arn': s(env.SourceBucketArn),
+    'dag-s3-path': s(env.DagS3Path),
+    'requirements-s3-path': s(env.RequirementsS3Path),
+    'requirements-s3-object-version': s(env.RequirementsS3ObjectVersion),
+    'plugins-s3-path': s(env.PluginsS3Path),
+    'plugins-s3-object-version': s(env.PluginsS3ObjectVersion),
+    'startup-script-s3-path': s(env.StartupScriptS3Path),
+    'startup-script-s3-object-version': s(env.StartupScriptS3ObjectVersion),
+    'last-update-status': s(env.LastUpdate?.Status)
   }
 }

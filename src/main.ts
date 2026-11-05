@@ -81,7 +81,7 @@ export async function run(inputs: Inputs, client?: Pick<MWAAClient, 'send'>): Pr
   core.endGroup()
 
   if (health === 'failed') core.warning(`MWAA environment '${name}' is ${status}.`, { title: 'Unhealthy MWAA environment' })
-  if (outputs.last_update_status === 'FAILED') {
+  if (outputs['last-update-status'] === 'FAILED') {
     const e = environment.LastUpdate?.Error
     core.warning(`The last update of '${name}' failed${e ? `: ${e.ErrorCode}: ${e.ErrorMessage}` : '.'}`, { title: 'MWAA update failed' })
   }
@@ -101,7 +101,7 @@ async function writeSummary(
   await core.summary
     .addHeading(`${icon(health)} MWAA environment ${name}`, 2)
     .addRaw(
-      `Region <code>${region}</code> · status <b>${o.status || 'UNKNOWN'}</b> · last update <b>${o.last_update_status || 'n/a'}</b>`,
+      `Region <code>${region}</code> · status <b>${o.status || 'UNKNOWN'}</b> · last update <b>${o['last-update-status'] || 'n/a'}</b>`,
       true
     )
     .addTable([
@@ -109,15 +109,15 @@ async function writeSummary(
         { data: 'Property', header: true },
         { data: 'Value', header: true }
       ],
-      ['Airflow version', code(o.airflow_version ?? '')],
-      ['Environment class', code(o.environment_class ?? '')],
-      ['Webserver URL', code(o.webserver_url ?? '')],
-      ['ARN', code(o.arn ?? '')],
-      ['Source bucket', code(o.source_bucket_arn ?? '')],
-      ['DAGs path', code(o.dag_s3_path ?? '')],
-      ['requirements.txt', code(withVersion(o.requirements_s3_path ?? '', o.requirements_s3_object_version ?? ''))],
-      ['plugins.zip', code(withVersion(o.plugins_s3_path ?? '', o.plugins_s3_object_version ?? ''))],
-      ['Startup script', code(withVersion(o.startup_script_s3_path ?? '', o.startup_script_s3_object_version ?? ''))]
+      ['Airflow version', code(o['airflow-version'] ?? '')],
+      ['Environment class', code(o['environment-class'] ?? '')],
+      ['Webserver URL', code(o['webserver-url'] ?? '')],
+      ['ARN', code(o['environment-arn'] ?? '')],
+      ['Source bucket', code(o['source-bucket-arn'] ?? '')],
+      ['DAGs path', code(o['dag-s3-path'] ?? '')],
+      ['requirements.txt', code(withVersion(o['requirements-s3-path'] ?? '', o['requirements-s3-object-version'] ?? ''))],
+      ['plugins.zip', code(withVersion(o['plugins-s3-path'] ?? '', o['plugins-s3-object-version'] ?? ''))],
+      ['Startup script', code(withVersion(o['startup-script-s3-path'] ?? '', o['startup-script-s3-object-version'] ?? ''))]
     ])
     .addDetails('Raw JSON', `<pre>${JSON.stringify(environment, null, 2).replace(/&/g, '&amp;').replace(/</g, '&lt;')}</pre>`)
     .write()

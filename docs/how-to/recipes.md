@@ -28,9 +28,9 @@ The action fails when the environment is missing. Let it fail without failing th
     name: my-environment
 
 - name: Require an available environment
-  if: steps.mwaa.outputs.status != 'AVAILABLE' || steps.mwaa.outputs.last_update_status == 'FAILED'
+  if: steps.mwaa.outputs.status != 'AVAILABLE' || steps.mwaa.outputs.last-update-status == 'FAILED'
   run: |
-    echo "::error::Environment is ${{ steps.mwaa.outputs.status }} (last update ${{ steps.mwaa.outputs.last_update_status }})"
+    echo "::error::Environment is ${{ steps.mwaa.outputs.status }} (last update ${{ steps.mwaa.outputs.last-update-status }})"
     exit 1
 ```
 
@@ -41,9 +41,9 @@ An environment keeps running the object versions it was last updated with. Compa
 ```yaml
 - name: Compare requirements.txt versions
   env:
-    BUCKET_ARN: ${{ steps.mwaa.outputs.source_bucket_arn }}
-    KEY: ${{ steps.mwaa.outputs.requirements_s3_path }}
-    DEPLOYED: ${{ steps.mwaa.outputs.requirements_s3_object_version }}
+    BUCKET_ARN: ${{ steps.mwaa.outputs.source-bucket-arn }}
+    KEY: ${{ steps.mwaa.outputs.requirements-s3-path }}
+    DEPLOYED: ${{ steps.mwaa.outputs.requirements-s3-object-version }}
   run: |
     latest=$(aws s3api head-object --bucket "${BUCKET_ARN##*:::}" --key "$KEY" --query VersionId --output text)
     if [ "$latest" != "$DEPLOYED" ]; then
@@ -60,6 +60,10 @@ This needs `s3:GetObjectVersion` on the bucket in addition to the [action's perm
 ```yaml
 - run: echo "Subnets: ${{ join(fromJSON(steps.mwaa.outputs.json).NetworkConfiguration.SubnetIds, ', ') }}"
 ```
+
+## Update the environment
+
+To change the environment and confirm the result, see [update an environment and verify it](update-and-verify.md), which combines this action with [mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action).
 
 ## Silence the job summary
 

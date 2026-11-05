@@ -105,19 +105,19 @@ describe('run with a mocked SDK', () => {
     assertSubset(o, {
       name: 'prod',
       status: 'AVAILABLE',
-      arn: full.Arn,
-      airflow_version: '2.10.3',
-      environment_class: 'mw1.small',
-      webserver_url: full.WebserverUrl,
-      source_bucket_arn: full.SourceBucketArn,
-      dag_s3_path: 'dags',
-      requirements_s3_path: 'requirements.txt',
-      requirements_s3_object_version: 'reqv1.AbCdEf',
-      plugins_s3_path: 'plugins.zip',
-      plugins_s3_object_version: full.PluginsS3ObjectVersion,
-      startup_script_s3_path: 'startup.sh',
-      startup_script_s3_object_version: 'startv1.GhIjKl',
-      last_update_status: 'SUCCESS'
+      'environment-arn': full.Arn,
+      'airflow-version': '2.10.3',
+      'environment-class': 'mw1.small',
+      'webserver-url': full.WebserverUrl,
+      'source-bucket-arn': full.SourceBucketArn,
+      'dag-s3-path': 'dags',
+      'requirements-s3-path': 'requirements.txt',
+      'requirements-s3-object-version': 'reqv1.AbCdEf',
+      'plugins-s3-path': 'plugins.zip',
+      'plugins-s3-object-version': full.PluginsS3ObjectVersion,
+      'startup-script-s3-path': 'startup.sh',
+      'startup-script-s3-object-version': 'startv1.GhIjKl',
+      'last-update-status': 'SUCCESS'
     })
     const json = JSON.parse(o.json as string)
     assert.equal(json.Name, 'prod')
@@ -128,7 +128,12 @@ describe('run with a mocked SDK', () => {
   it('returns empty strings for fields the environment does not set', async () => {
     sdk.on(GetEnvironmentCommand).resolves({ Environment: { Name: 'dev', Status: 'CREATING' } })
     await run(inputs({ name: 'dev' }), sdkClient())
-    assertSubset(readOutputs(), { status: 'CREATING', plugins_s3_object_version: '', startup_script_s3_path: '', last_update_status: '' })
+    assertSubset(readOutputs(), {
+      status: 'CREATING',
+      'plugins-s3-object-version': '',
+      'startup-script-s3-path': '',
+      'last-update-status': ''
+    })
     assert.equal(process.exitCode, undefined)
   })
 
@@ -246,7 +251,11 @@ describe('run with the real SDK against a local HTTP server', () => {
   it('maps a real 200 response to outputs', async () => {
     await run(inputs(), client)
     assert.equal(process.exitCode, undefined)
-    assertSubset(readOutputs(), { status: 'AVAILABLE', airflow_version: '2.10.3', plugins_s3_object_version: full.PluginsS3ObjectVersion })
+    assertSubset(readOutputs(), {
+      status: 'AVAILABLE',
+      'airflow-version': '2.10.3',
+      'plugins-s3-object-version': full.PluginsS3ObjectVersion
+    })
   })
 
   it('maps a real 404 ResourceNotFoundException to the not-found failure', async () => {
