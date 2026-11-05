@@ -596,10 +596,10 @@ var require_errors = __commonJS({
     };
     var kHTTPParserError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_HTTP_PARSER");
     var HTTPParserError = class extends Error {
-      constructor(message, code, data) {
+      constructor(message, code2, data) {
         super(message);
         this.name = "HTTPParserError";
-        this.code = code ? `HPE_${code}` : void 0;
+        this.code = code2 ? `HPE_${code2}` : void 0;
         this.data = data ? data.toString() : void 0;
       }
       static [Symbol.hasInstance](instance) {
@@ -622,12 +622,12 @@ var require_errors = __commonJS({
     };
     var kRequestRetryError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_REQ_RETRY");
     var RequestRetryError = class extends UndiciError {
-      constructor(message, code, { headers, data }) {
+      constructor(message, code2, { headers, data }) {
         super(message);
         this.name = "RequestRetryError";
         this.message = message || "Request retry error";
         this.code = "UND_ERR_REQ_RETRY";
-        this.statusCode = code;
+        this.statusCode = code2;
         this.data = data;
         this.headers = headers;
       }
@@ -638,12 +638,12 @@ var require_errors = __commonJS({
     };
     var kResponseError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_RESPONSE");
     var ResponseError = class extends UndiciError {
-      constructor(message, code, { headers, data }) {
+      constructor(message, code2, { headers, data }) {
         super(message);
         this.name = "ResponseError";
         this.message = message || "Response error";
         this.code = "UND_ERR_RESPONSE";
-        this.statusCode = code;
+        this.statusCode = code2;
         this.data = data;
         this.headers = headers;
       }
@@ -853,8 +853,8 @@ var require_tree = __commonJS({
         if (index === void 0 || index >= key.length) {
           throw new TypeError("Unreachable");
         }
-        const code = this.code = key.charCodeAt(index);
-        if (code > 127) {
+        const code2 = this.code = key.charCodeAt(index);
+        if (code2 > 127) {
           throw new TypeError("key must be ascii string");
         }
         if (key.length !== ++index) {
@@ -875,11 +875,11 @@ var require_tree = __commonJS({
         let index = 0;
         let node = this;
         while (true) {
-          const code = key.charCodeAt(index);
-          if (code > 127) {
+          const code2 = key.charCodeAt(index);
+          if (code2 > 127) {
             throw new TypeError("key must be ascii string");
           }
-          if (node.code === code) {
+          if (node.code === code2) {
             if (length === ++index) {
               node.value = value;
               break;
@@ -889,7 +889,7 @@ var require_tree = __commonJS({
               node.middle = new _TstNode(key, value, index);
               break;
             }
-          } else if (node.code < code) {
+          } else if (node.code < code2) {
             if (node.left !== null) {
               node = node.left;
             } else {
@@ -913,19 +913,19 @@ var require_tree = __commonJS({
         let index = 0;
         let node = this;
         while (node !== null && index < keylength) {
-          let code = key[index];
-          if (code <= 90 && code >= 65) {
-            code |= 32;
+          let code2 = key[index];
+          if (code2 <= 90 && code2 >= 65) {
+            code2 |= 32;
           }
           while (node !== null) {
-            if (code === node.code) {
+            if (code2 === node.code) {
               if (keylength === ++index) {
                 return node;
               }
               node = node.middle;
               break;
             }
-            node = node.code < code ? node.left : node.right;
+            node = node.code < code2 ? node.left : node.right;
           }
         }
         return null;
@@ -1632,11 +1632,11 @@ var require_diagnostics = __commonJS({
         websocketDebuglog("connection opened %s%s", address, port ? `:${port}` : "");
       });
       diagnosticsChannel.channel("undici:websocket:close").subscribe((evt) => {
-        const { websocket, code, reason } = evt;
+        const { websocket, code: code2, reason } = evt;
         websocketDebuglog(
           "closed connection to %s - %s %s",
           websocket.url,
-          code,
+          code2,
           reason
         );
       });
@@ -4124,9 +4124,9 @@ var require_util2 = __commonJS({
     }
     function isValidEncodedURL(url) {
       for (let i5 = 0; i5 < url.length; ++i5) {
-        const code = url.charCodeAt(i5);
-        if (code > 126 || // Non-US-ASCII + DEL
-        code < 32) {
+        const code2 = url.charCodeAt(i5);
+        if (code2 > 126 || // Non-US-ASCII + DEL
+        code2 < 32) {
           return false;
         }
       }
@@ -4717,8 +4717,8 @@ var require_util2 = __commonJS({
       }
       const rangeStart = collectASequenceOfCodePoints(
         (char) => {
-          const code = char.charCodeAt(0);
-          return code >= 48 && code <= 57;
+          const code2 = char.charCodeAt(0);
+          return code2 >= 48 && code2 <= 57;
         },
         data,
         position
@@ -4744,8 +4744,8 @@ var require_util2 = __commonJS({
       }
       const rangeEnd = collectASequenceOfCodePoints(
         (char) => {
-          const code = char.charCodeAt(0);
-          return code >= 48 && code <= 57;
+          const code2 = char.charCodeAt(0);
+          return code2 >= 48 && code2 <= 57;
         },
         data,
         position
@@ -7036,9 +7036,9 @@ var require_client_h2 = __commonJS({
       this[kSocket][kError] = err;
       this[kClient][kOnError](err);
     }
-    function onHttp2FrameError(type, code, id) {
+    function onHttp2FrameError(type, code2, id) {
       if (id === 0) {
-        const err = new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code}`);
+        const err = new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code2}`);
         this[kSocket][kError] = err;
         this[kClient][kOnError](err);
       }
@@ -7048,8 +7048,8 @@ var require_client_h2 = __commonJS({
       this.destroy(err);
       util.destroy(this[kSocket], err);
     }
-    function onHTTP2GoAway(code) {
-      const err = this[kError] || new SocketError(`HTTP/2: "GOAWAY" frame received with code ${code}`, util.getSocketInfo(this));
+    function onHTTP2GoAway(code2) {
+      const err = this[kError] || new SocketError(`HTTP/2: "GOAWAY" frame received with code ${code2}`, util.getSocketInfo(this));
       const client = this[kClient];
       client[kSocket] = null;
       client[kHTTPContext] = null;
@@ -7254,8 +7254,8 @@ var require_client_h2 = __commonJS({
       stream.once("error", function(err) {
         abort(err);
       });
-      stream.once("frameError", (type, code) => {
-        abort(new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code}`));
+      stream.once("frameError", (type, code2) => {
+        abort(new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code2}`));
       });
       return true;
       function writeBodyH2() {
@@ -9193,7 +9193,7 @@ var require_retry_handler = __commonJS({
         if (this.handler.onBodySent) return this.handler.onBodySent(chunk);
       }
       static [kRetryHandlerDefaultRetry](err, { state: state2, opts }, cb) {
-        const { statusCode, code, headers } = err;
+        const { statusCode, code: code2, headers } = err;
         const { method, retryOptions } = opts;
         const {
           maxRetries,
@@ -9205,7 +9205,7 @@ var require_retry_handler = __commonJS({
           methods
         } = retryOptions;
         const { counter } = state2;
-        if (code && code !== "UND_ERR_REQ_RETRY" && !errorCodes.includes(code)) {
+        if (code2 && code2 !== "UND_ERR_REQ_RETRY" && !errorCodes.includes(code2)) {
           cb(err);
           return;
         }
@@ -11948,8 +11948,8 @@ var require_headers = __commonJS({
     var util = require("node:util");
     var kHeadersMap = /* @__PURE__ */ Symbol("headers map");
     var kHeadersSortedMap = /* @__PURE__ */ Symbol("headers map sorted");
-    function isHTTPWhiteSpaceCharCode(code) {
-      return code === 10 || code === 13 || code === 9 || code === 32;
+    function isHTTPWhiteSpaceCharCode(code2) {
+      return code2 === 10 || code2 === 13 || code2 === 9 || code2 === 32;
     }
     function headerValueNormalize(potentialValue) {
       let i5 = 0;
@@ -16104,8 +16104,8 @@ var require_util6 = __commonJS({
     "use strict";
     function isCTLExcludingHtab(value) {
       for (let i5 = 0; i5 < value.length; ++i5) {
-        const code = value.charCodeAt(i5);
-        if (code >= 0 && code <= 8 || code >= 10 && code <= 31 || code === 127) {
+        const code2 = value.charCodeAt(i5);
+        if (code2 >= 0 && code2 <= 8 || code2 >= 10 && code2 <= 31 || code2 === 127) {
           return true;
         }
       }
@@ -16113,26 +16113,26 @@ var require_util6 = __commonJS({
     }
     function validateCookieName(name) {
       for (let i5 = 0; i5 < name.length; ++i5) {
-        const code = name.charCodeAt(i5);
-        if (code < 33 || // exclude CTLs (0-31), SP and HT
-        code > 126 || // exclude non-ascii and DEL
-        code === 34 || // "
-        code === 40 || // (
-        code === 41 || // )
-        code === 60 || // <
-        code === 62 || // >
-        code === 64 || // @
-        code === 44 || // ,
-        code === 59 || // ;
-        code === 58 || // :
-        code === 92 || // \
-        code === 47 || // /
-        code === 91 || // [
-        code === 93 || // ]
-        code === 63 || // ?
-        code === 61 || // =
-        code === 123 || // {
-        code === 125) {
+        const code2 = name.charCodeAt(i5);
+        if (code2 < 33 || // exclude CTLs (0-31), SP and HT
+        code2 > 126 || // exclude non-ascii and DEL
+        code2 === 34 || // "
+        code2 === 40 || // (
+        code2 === 41 || // )
+        code2 === 60 || // <
+        code2 === 62 || // >
+        code2 === 64 || // @
+        code2 === 44 || // ,
+        code2 === 59 || // ;
+        code2 === 58 || // :
+        code2 === 92 || // \
+        code2 === 47 || // /
+        code2 === 91 || // [
+        code2 === 93 || // ]
+        code2 === 63 || // ?
+        code2 === 61 || // =
+        code2 === 123 || // {
+        code2 === 125) {
           throw new Error("Invalid cookie name");
         }
       }
@@ -16148,31 +16148,31 @@ var require_util6 = __commonJS({
         ++i5;
       }
       while (i5 < len) {
-        const code = value.charCodeAt(i5++);
-        if (code < 33 || // exclude CTLs (0-31)
-        code > 126 || // non-ascii and DEL (127)
-        code === 34 || // "
-        code === 44 || // ,
-        code === 59 || // ;
-        code === 92) {
+        const code2 = value.charCodeAt(i5++);
+        if (code2 < 33 || // exclude CTLs (0-31)
+        code2 > 126 || // non-ascii and DEL (127)
+        code2 === 34 || // "
+        code2 === 44 || // ,
+        code2 === 59 || // ;
+        code2 === 92) {
           throw new Error("Invalid cookie value");
         }
       }
     }
     function validateCookiePath(path) {
       for (let i5 = 0; i5 < path.length; ++i5) {
-        const code = path.charCodeAt(i5);
-        if (code < 32 || // exclude CTLs (0-31)
-        code > 126 || // exclude DEL and non-ascii
-        code === 59) {
+        const code2 = path.charCodeAt(i5);
+        if (code2 < 32 || // exclude CTLs (0-31)
+        code2 > 126 || // exclude DEL and non-ascii
+        code2 === 59) {
           throw new Error("Invalid cookie path");
         }
       }
     }
-    function isLetterOrDigit(code) {
-      return code >= 48 && code <= 57 || // 0-9
-      code >= 65 && code <= 90 || // A-Z
-      code >= 97 && code <= 122;
+    function isLetterOrDigit(code2) {
+      return code2 >= 48 && code2 <= 57 || // 0-9
+      code2 >= 65 && code2 <= 90 || // A-Z
+      code2 >= 97 && code2 <= 122;
     }
     function validateCookieDomain(domain) {
       if (domain === " ") {
@@ -16183,8 +16183,8 @@ var require_util6 = __commonJS({
       }
       let labelLength = 0;
       for (let i5 = 0; i5 < domain.length; ++i5) {
-        const code = domain.charCodeAt(i5);
-        if (code === 46) {
+        const code2 = domain.charCodeAt(i5);
+        if (code2 === 46) {
           if (labelLength === 0) {
             throw new Error("Invalid cookie domain");
           }
@@ -16194,10 +16194,10 @@ var require_util6 = __commonJS({
           labelLength = 0;
           continue;
         }
-        if (labelLength === 0 && !isLetterOrDigit(code)) {
+        if (labelLength === 0 && !isLetterOrDigit(code2)) {
           throw new Error("Invalid cookie domain");
         }
-        if (!isLetterOrDigit(code) && code !== 45) {
+        if (!isLetterOrDigit(code2) && code2 !== 45) {
           throw new Error("Invalid cookie domain");
         }
         if (++labelLength > 63) {
@@ -16971,37 +16971,37 @@ var require_util7 = __commonJS({
         return false;
       }
       for (let i5 = 0; i5 < protocol.length; ++i5) {
-        const code = protocol.charCodeAt(i5);
-        if (code < 33 || // CTL, contains SP (0x20) and HT (0x09)
-        code > 126 || code === 34 || // "
-        code === 40 || // (
-        code === 41 || // )
-        code === 44 || // ,
-        code === 47 || // /
-        code === 58 || // :
-        code === 59 || // ;
-        code === 60 || // <
-        code === 61 || // =
-        code === 62 || // >
-        code === 63 || // ?
-        code === 64 || // @
-        code === 91 || // [
-        code === 92 || // \
-        code === 93 || // ]
-        code === 123 || // {
-        code === 125) {
+        const code2 = protocol.charCodeAt(i5);
+        if (code2 < 33 || // CTL, contains SP (0x20) and HT (0x09)
+        code2 > 126 || code2 === 34 || // "
+        code2 === 40 || // (
+        code2 === 41 || // )
+        code2 === 44 || // ,
+        code2 === 47 || // /
+        code2 === 58 || // :
+        code2 === 59 || // ;
+        code2 === 60 || // <
+        code2 === 61 || // =
+        code2 === 62 || // >
+        code2 === 63 || // ?
+        code2 === 64 || // @
+        code2 === 91 || // [
+        code2 === 92 || // \
+        code2 === 93 || // ]
+        code2 === 123 || // {
+        code2 === 125) {
           return false;
         }
       }
       return true;
     }
-    function isValidStatusCode(code) {
-      if (code >= 1e3 && code < 1015) {
-        return code !== 1004 && // reserved
-        code !== 1005 && // "MUST NOT be set as a status code"
-        code !== 1006;
+    function isValidStatusCode(code2) {
+      if (code2 >= 1e3 && code2 < 1015) {
+        return code2 !== 1004 && // reserved
+        code2 !== 1005 && // "MUST NOT be set as a status code"
+        code2 !== 1006;
       }
-      return code >= 3e3 && code <= 4999;
+      return code2 >= 3e3 && code2 <= 4999;
     }
     function failWebsocketConnection(ws, reason) {
       const { [kController]: controller, [kResponse]: response } = ws;
@@ -17270,7 +17270,7 @@ var require_connection = __commonJS({
       });
       return controller;
     }
-    function closeWebSocketConnection(ws, code, reason, reasonByteLength) {
+    function closeWebSocketConnection(ws, code2, reason, reasonByteLength) {
       if (isClosing(ws) || isClosed(ws)) {
       } else if (!isEstablished(ws)) {
         failWebsocketConnection(ws, "Connection was closed before it was established.");
@@ -17278,12 +17278,12 @@ var require_connection = __commonJS({
       } else if (ws[kSentClose] === sentCloseFrameState.NOT_SENT) {
         ws[kSentClose] = sentCloseFrameState.PROCESSING;
         const frame = new WebsocketFrameSend();
-        if (code !== void 0 && reason === void 0) {
+        if (code2 !== void 0 && reason === void 0) {
           frame.frameData = Buffer.allocUnsafe(2);
-          frame.frameData.writeUInt16BE(code, 0);
-        } else if (code !== void 0 && reason !== void 0) {
+          frame.frameData.writeUInt16BE(code2, 0);
+        } else if (code2 !== void 0 && reason !== void 0) {
           frame.frameData = Buffer.allocUnsafe(2 + reasonByteLength);
-          frame.frameData.writeUInt16BE(code, 0);
+          frame.frameData.writeUInt16BE(code2, 0);
           frame.frameData.write(reason, 2, "utf-8");
         } else {
           frame.frameData = emptyBuffer;
@@ -17308,25 +17308,25 @@ var require_connection = __commonJS({
       response.socket.off("close", onSocketClose);
       response.socket.off("error", onSocketError);
       const wasClean = ws[kSentClose] === sentCloseFrameState.SENT && ws[kReceivedClose];
-      let code = 1005;
+      let code2 = 1005;
       let reason = "";
       const result = ws[kByteParser].closingInfo;
       if (result && !result.error) {
-        code = result.code ?? 1005;
+        code2 = result.code ?? 1005;
         reason = result.reason;
       } else if (!ws[kReceivedClose]) {
-        code = 1006;
+        code2 = 1006;
       }
       ws[kReadyState] = states.CLOSED;
       fireEvent("close", ws, (type, init) => new CloseEvent(type, init), {
         wasClean,
-        code,
+        code: code2,
         reason
       });
       if (channels.close.hasSubscribers) {
         channels.close.publish({
           websocket: ws,
-          code,
+          code: code2,
           reason
         });
       }
@@ -17451,8 +17451,8 @@ var require_receiver = __commonJS({
     var { closeWebSocketConnection } = require_connection();
     var { PerMessageDeflate } = require_permessage_deflate();
     var { MessageSizeExceededError } = require_errors();
-    function failWebsocketConnectionWithCode(ws, code, reason) {
-      closeWebSocketConnection(ws, code, reason, Buffer.byteLength(reason));
+    function failWebsocketConnectionWithCode(ws, code2, reason) {
+      closeWebSocketConnection(ws, code2, reason, Buffer.byteLength(reason));
       failWebsocketConnection(ws, reason);
     }
     var ByteParser = class extends Writable4 {
@@ -17639,8 +17639,8 @@ var require_receiver = __commonJS({
                   this.#info.fin,
                   (error3, data) => {
                     if (error3) {
-                      const code = error3 instanceof MessageSizeExceededError ? 1009 : 1007;
-                      failWebsocketConnectionWithCode(this.ws, code, error3.message);
+                      const code2 = error3 instanceof MessageSizeExceededError ? 1009 : 1007;
+                      failWebsocketConnectionWithCode(this.ws, code2, error3.message);
                       return;
                     }
                     if (!this.writeFragments(data)) {
@@ -17726,11 +17726,11 @@ var require_receiver = __commonJS({
       }
       parseCloseBody(data) {
         assert(data.length !== 1);
-        let code;
+        let code2;
         if (data.length >= 2) {
-          code = data.readUInt16BE(0);
+          code2 = data.readUInt16BE(0);
         }
-        if (code !== void 0 && !isValidStatusCode(code)) {
+        if (code2 !== void 0 && !isValidStatusCode(code2)) {
           return { code: 1002, reason: "Invalid status code", error: true };
         }
         let reason = data.subarray(2);
@@ -17742,7 +17742,7 @@ var require_receiver = __commonJS({
         } catch {
           return { code: 1007, reason: "Invalid UTF-8", error: true };
         }
-        return { code, reason, error: false };
+        return { code: code2, reason, error: false };
       }
       /**
        * Parses control frames.
@@ -17757,8 +17757,8 @@ var require_receiver = __commonJS({
           }
           this.#info.closeInfo = this.parseCloseBody(body);
           if (this.#info.closeInfo.error) {
-            const { code, reason } = this.#info.closeInfo;
-            closeWebSocketConnection(this.ws, code, reason, reason.length);
+            const { code: code2, reason } = this.#info.closeInfo;
+            closeWebSocketConnection(this.ws, code2, reason, reason.length);
             failWebsocketConnection(this.ws, reason);
             return false;
           }
@@ -17996,17 +17996,17 @@ var require_websocket = __commonJS({
        * @param {number|undefined} code
        * @param {string|undefined} reason
        */
-      close(code = void 0, reason = void 0) {
+      close(code2 = void 0, reason = void 0) {
         webidl.brandCheck(this, _WebSocket);
         const prefix = "WebSocket.close";
-        if (code !== void 0) {
-          code = webidl.converters["unsigned short"](code, prefix, "code", { clamp: true });
+        if (code2 !== void 0) {
+          code2 = webidl.converters["unsigned short"](code2, prefix, "code", { clamp: true });
         }
         if (reason !== void 0) {
           reason = webidl.converters.USVString(reason, prefix, "reason");
         }
-        if (code !== void 0) {
-          if (code !== 1e3 && (code < 3e3 || code > 4999)) {
+        if (code2 !== void 0) {
+          if (code2 !== 1e3 && (code2 < 3e3 || code2 > 4999)) {
             throw new DOMException("invalid code", "InvalidAccessError");
           }
         }
@@ -18020,7 +18020,7 @@ var require_websocket = __commonJS({
             );
           }
         }
-        closeWebSocketConnection(this, code, reason, reasonByteLength);
+        closeWebSocketConnection(this, code2, reason, reasonByteLength);
       }
       /**
        * @see https://websockets.spec.whatwg.org/#dom-websocket-send
@@ -18266,15 +18266,15 @@ var require_websocket = __commonJS({
     }
     function onParserError(err) {
       let message;
-      let code;
+      let code2;
       if (err instanceof CloseEvent) {
         message = err.reason;
-        code = err.code;
+        code2 = err.code;
       } else {
         message = err.message;
       }
       fireEvent("error", this, () => new ErrorEvent("error", { error: err, message }));
-      closeWebSocketConnection(this, code);
+      closeWebSocketConnection(this, code2);
     }
     module2.exports = {
       WebSocket
@@ -27583,15 +27583,15 @@ function getMessageUnmarshaller(deserializer, toUtf83) {
       unmodeledError.name = message.headers[":error-code"].value;
       throw unmodeledError;
     } else if (messageType === "exception") {
-      const code = message.headers[":exception-type"].value;
-      const exception = { [code]: message };
+      const code2 = message.headers[":exception-type"].value;
+      const exception = { [code2]: message };
       const deserializedException = await deserializer(exception);
       if (deserializedException.$unknown) {
         const error3 = new Error(toUtf83(message.body));
-        error3.name = code;
+        error3.name = code2;
         throw error3;
       }
-      throw deserializedException[code];
+      throw deserializedException[code2];
     } else if (messageType === "event") {
       const event = {
         [message.headers[":event-type"].value]: message
@@ -30094,11 +30094,11 @@ var init_JsonShapeSerializer2 = __esm({
         }
         this.json[this.i++] = QUOTE;
       }
-      writeUnicodeEscape(code) {
+      writeUnicodeEscape(code2) {
         let { json, i: i5 } = this;
         json[i5++] = BACKSLASH;
         json[i5++] = 117;
-        const hex = code.toString(16).padStart(4, "0");
+        const hex = code2.toString(16).padStart(4, "0");
         for (let j5 = 0; j5 < 4; ++j5) {
           json[i5++] = hex.charCodeAt(j5);
         }
@@ -38258,8 +38258,8 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
               abortSignal.onabort = onAbort;
             }
           }
-          clientHttp2Stream.on("frameError", (type, code, id) => {
-            rejectWithDestroy(new Error(`Frame type id ${type} in stream id ${id} has failed with code ${code}.`));
+          clientHttp2Stream.on("frameError", (type, code2, id) => {
+            rejectWithDestroy(new Error(`Frame type id ${type} in stream id ${id} has failed with code ${code2}.`));
           });
           clientHttp2Stream.on("error", rejectWithDestroy);
           clientHttp2Stream.on("aborted", () => {
@@ -41442,9 +41442,9 @@ var init_AwsQueryProtocol = __esm({
         }, output), dataObject);
       }
       loadQueryErrorCode(output, data) {
-        const code = (data.Errors?.[0]?.Error ?? data.Errors?.Error ?? data.Error)?.Code;
-        if (code !== void 0) {
-          return code;
+        const code2 = (data.Errors?.[0]?.Error ?? data.Errors?.Error ?? data.Error)?.Code;
+        if (code2 !== void 0) {
+          return code2;
         }
         if (output.statusCode == 404) {
           return "NotFound";
@@ -48632,9 +48632,9 @@ var Summary = class {
    *
    * @returns {Summary} summary instance
    */
-  addCodeBlock(code, lang) {
+  addCodeBlock(code2, lang) {
     const attrs = Object.assign({}, lang && { lang });
-    const element = this.wrap("pre", this.wrap("code", code), attrs);
+    const element = this.wrap("pre", this.wrap("code", code2), attrs);
     return this.addRaw(element).addEOL();
   }
   /**
@@ -48839,7 +48839,7 @@ var import_client_mwaa = __toESM(require_dist_cjs16(), 1);
 // src/format.ts
 var ANSI = { ok: "32", busy: "94", warn: "33", fail: "31", idle: "90" };
 var SUMMARY_DOT = { ok: "\u{1F7E2}", busy: "\u{1F535}", warn: "\u{1F7E1}", fail: "\u{1F534}", idle: "\u26AA" };
-var paint = (code, text) => `\x1B[${code}m${text}\x1B[0m`;
+var paint = (code2, text) => `\x1B[${code2}m${text}\x1B[0m`;
 var dim = (text) => paint("2", text);
 function toneOf(status) {
   switch (status) {
@@ -48890,7 +48890,7 @@ function toOutputs(env2) {
 }
 
 // src/main.ts
-var NAME_PATTERN = /^[a-zA-Z][0-9a-zA-Z-_]{0,79}$/;
+var NAME_PATTERN = /^[a-zA-Z][\w-]{0,79}$/;
 function readInputs(env2 = process.env) {
   return {
     name: getInput("name", { required: true }).trim(),
@@ -48898,52 +48898,56 @@ function readInputs(env2 = process.env) {
     summary: getBooleanInput("summary")
   };
 }
-var errName = (err) => err?.name ?? "Error";
-var errMessage = (err) => err?.message ?? String(err);
+var errorMessage = (err) => err instanceof Error ? err.message : String(err);
 async function run(inputs, client) {
-  const { name, region } = inputs;
+  try {
+    validate(inputs);
+    info(`${paint("1", "MWAA environment")} ${paint("36", inputs.name)} ${dim(`(${inputs.region})`)}`);
+    const environment = await getEnvironment(inputs, client ?? new import_client_mwaa.MWAAClient({ region: inputs.region }));
+    const outputs = toOutputs(environment);
+    publish(outputs, environment);
+    log(inputs.name, outputs, environment);
+    if (inputs.summary) await writeSummary(inputs.region, outputs, environment);
+  } catch (err) {
+    setFailed(errorMessage(err));
+  }
+}
+function validate({ name, region }) {
   if (!NAME_PATTERN.test(name)) {
-    setFailed(
+    throw new Error(
       `Invalid environment name '${name}': it must start with a letter, contain only letters, digits, '-' or '_', and be at most 80 characters.`
     );
-    return;
   }
   if (!region) {
-    setFailed("No AWS region: set the 'region' input or AWS_REGION (aws-actions/configure-aws-credentials sets it for you).");
-    return;
+    throw new Error("No AWS region: set the 'region' input or AWS_REGION (aws-actions/configure-aws-credentials sets it for you).");
   }
-  info(`${paint("1", "MWAA environment")} ${paint("36", name)} ${dim(`(${region})`)}`);
-  const mwaa = client ?? new import_client_mwaa.MWAAClient({ region });
-  let environment;
-  try {
-    ;
-    ({ Environment: environment } = await mwaa.send(new import_client_mwaa.GetEnvironmentCommand({ Name: name })));
-  } catch (err) {
-    switch (errName(err)) {
-      case "ResourceNotFoundException":
-        setFailed(`MWAA environment '${name}' was not found in region ${region}.`);
-        break;
-      case "AccessDeniedException":
-        setFailed(
-          `Access denied calling airflow:GetEnvironment for '${name}' in ${region}. Check the IAM permissions of the credentials in use. ${errMessage(err)}`
-        );
-        break;
-      default:
-        setFailed(`GetEnvironment failed for '${name}' in ${region}: ${errName(err)}: ${errMessage(err)}`);
-    }
-    return;
+}
+async function getEnvironment({ name, region }, client) {
+  const { Environment } = await client.send(new import_client_mwaa.GetEnvironmentCommand({ Name: name })).catch((err) => {
+    throw new Error(describeFailure(err, name, region), { cause: err });
+  });
+  if (!Environment) throw new Error("Unexpected response from GetEnvironment: missing 'Environment'.");
+  return Environment;
+}
+function describeFailure(err, name, region) {
+  const code2 = err instanceof Error ? err.name : "Error";
+  switch (code2) {
+    case "ResourceNotFoundException":
+      return `MWAA environment '${name}' was not found in region ${region}.`;
+    case "AccessDeniedException":
+      return `Access denied calling airflow:GetEnvironment for '${name}' in ${region}. Check the IAM permissions of the credentials in use. ${errorMessage(err)}`;
+    default:
+      return `GetEnvironment failed for '${name}' in ${region}: ${code2}: ${errorMessage(err)}`;
   }
-  if (!environment) {
-    setFailed("Unexpected response from GetEnvironment: missing 'Environment'.");
-    return;
-  }
-  const outputs = toOutputs(environment);
+}
+function publish(outputs, environment) {
   for (const [key, value] of Object.entries(outputs)) setOutput(key, value);
-  const json = JSON.stringify(environment);
-  setOutput("json", json);
-  const status = outputs.status || "UNKNOWN";
-  info(`${paint("1", "Status")}       ${logStatus(environment.Status)}`);
-  info(`${paint("1", "Last update")}  ${logStatus(environment.LastUpdate?.Status)}`);
+  setOutput("json", JSON.stringify(environment));
+}
+function log(name, outputs, environment) {
+  const label = (text) => paint("1", text.padEnd(12));
+  info(`${label("Status")} ${logStatus(outputs.status)}`);
+  info(`${label("Last update")} ${logStatus(outputs["last-update-status"])}`);
   startGroup("Environment details");
   for (const [key, value] of Object.entries(outputs)) {
     if (key !== "name" && key !== "status") info(`${dim(key.padEnd(34))} ${value || dim("-")}`);
@@ -48952,35 +48956,43 @@ async function run(inputs, client) {
   startGroup("Raw JSON");
   info(JSON.stringify(environment, null, 2));
   endGroup();
-  if (toneOf(environment.Status) === "fail")
-    warning(`MWAA environment '${name}' is ${status}.`, { title: "Unhealthy MWAA environment" });
-  if (outputs["last-update-status"] === "FAILED") {
-    const e5 = environment.LastUpdate?.Error;
-    warning(`The last update of '${name}' failed${e5 ? `: ${e5.ErrorCode}: ${e5.ErrorMessage}` : "."}`, { title: "MWAA update failed" });
+  if (toneOf(outputs.status) === "fail") {
+    warning(`MWAA environment '${name}' is ${outputs.status}.`, { title: "Unhealthy MWAA environment" });
   }
-  if (inputs.summary) await writeSummary(name, region, outputs, environment);
+  if (outputs["last-update-status"] === "FAILED") {
+    const error3 = environment.LastUpdate?.Error;
+    const detail = error3 ? `: ${error3.ErrorCode}: ${error3.ErrorMessage}` : ".";
+    warning(`The last update of '${name}' failed${detail}`, { title: "MWAA update failed" });
+  }
 }
-async function writeSummary(name, region, o3, environment) {
-  const code = (v) => v ? `<code>${v}</code>` : "\u2013";
-  const withVersion = (path, version) => [path, version].filter(Boolean).join(" @ ");
-  await summary.addHeading(`MWAA environment: ${name}`, 2).addRaw(`Region <code>${region}</code>`, true).addTable([
+var escapeHtml = (text) => text.replace(/[&<>"]/g, (c5) => `&#${c5.charCodeAt(0)};`);
+var code = (...parts) => {
+  const text = parts.filter(Boolean).join(" @ ");
+  return text ? `<code>${escapeHtml(text)}</code>` : "\u2013";
+};
+async function writeSummary(region, o3, environment) {
+  await summary.addHeading(`MWAA environment: ${escapeHtml(o3.name)}`, 2).addRaw(`Region ${code(region)}`, true).addTable([
     [
       { data: "Property", header: true },
       { data: "Value", header: true }
     ],
-    ["Status", summaryStatus(environment.Status)],
-    ["Last update", summaryStatus(environment.LastUpdate?.Status)],
-    ["Airflow version", code(o3["airflow-version"] ?? "")],
-    ["Environment class", code(o3["environment-class"] ?? "")],
-    ["Webserver URL", code(o3["webserver-url"] ?? "")],
-    ["ARN", code(o3["environment-arn"] ?? "")],
-    ["Source bucket", code(o3["source-bucket-arn"] ?? "")],
-    ["DAGs path", code(o3["dag-s3-path"] ?? "")],
-    ["requirements.txt", code(withVersion(o3["requirements-s3-path"] ?? "", o3["requirements-s3-object-version"] ?? ""))],
-    ["plugins.zip", code(withVersion(o3["plugins-s3-path"] ?? "", o3["plugins-s3-object-version"] ?? ""))],
-    ["Startup script", code(withVersion(o3["startup-script-s3-path"] ?? "", o3["startup-script-s3-object-version"] ?? ""))]
-  ]).addDetails("Raw JSON", `<pre>${JSON.stringify(environment, null, 2).replace(/&/g, "&amp;").replace(/</g, "&lt;")}</pre>`).write();
+    ["Status", escapeHtml(summaryStatus(o3.status))],
+    ["Last update", escapeHtml(summaryStatus(o3["last-update-status"]))],
+    ["Airflow version", code(o3["airflow-version"])],
+    ["Environment class", code(o3["environment-class"])],
+    ["Webserver URL", code(o3["webserver-url"])],
+    ["ARN", code(o3["environment-arn"])],
+    ["Source bucket", code(o3["source-bucket-arn"])],
+    ["DAGs path", code(o3["dag-s3-path"])],
+    ["requirements.txt", code(o3["requirements-s3-path"], o3["requirements-s3-object-version"])],
+    ["plugins.zip", code(o3["plugins-s3-path"], o3["plugins-s3-object-version"])],
+    ["Startup script", code(o3["startup-script-s3-path"], o3["startup-script-s3-object-version"])]
+  ]).addDetails("Raw JSON", `<pre>${escapeHtml(JSON.stringify(environment, null, 2))}</pre>`).write();
 }
 
 // src/index.ts
-run(readInputs()).catch((err) => setFailed(err instanceof Error ? err.message : String(err)));
+try {
+  void run(readInputs());
+} catch (err) {
+  setFailed(errorMessage(err));
+}

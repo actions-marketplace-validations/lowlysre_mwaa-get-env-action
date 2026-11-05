@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { createServer, type Server } from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { afterEach, beforeEach, describe, it, mock } from 'node:test'
+import { after, afterEach, beforeEach, describe, it, mock } from 'node:test'
 import { GetEnvironmentCommand, MWAAClient, ResourceNotFoundException } from '@aws-sdk/client-mwaa'
 import { mockClient, type AwsClientStub } from 'aws-sdk-client-mock'
 import { logStatus } from '../src/format.ts'
@@ -29,9 +29,12 @@ const full = {
   LastUpdate: { Status: 'SUCCESS' as const }
 }
 
-let dir: string
-let outFile: string
-let summaryFile: string
+// @actions/core caches the job summary path on first write, so the files live for the whole run.
+const dir = mkdtempSync(join(tmpdir(), 'mwaa-'))
+const outFile = join(dir, 'output')
+const summaryFile = join(dir, 'summary.md')
+process.env.GITHUB_OUTPUT = outFile
+process.env.GITHUB_STEP_SUMMARY = summaryFile
 let stdout: string
 
 const realWrite = process.stdout.write.bind(process.stdout) as (...a: unknown[]) => boolean
@@ -72,13 +75,8 @@ const inputs = (over: Partial<Inputs> = {}): Inputs => ({ name: 'prod', region: 
 const sdkClient = () => new MWAAClient({ region: 'us-west-2' })
 
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), 'mwaa-'))
-  outFile = join(dir, 'output')
-  summaryFile = join(dir, 'summary.md')
   writeFileSync(outFile, '')
   writeFileSync(summaryFile, '')
-  process.env.GITHUB_OUTPUT = outFile
-  process.env.GITHUB_STEP_SUMMARY = summaryFile
   process.exitCode = undefined
   stdout = ''
   captureStdout()
@@ -87,8 +85,9 @@ beforeEach(() => {
 afterEach(() => {
   mock.restoreAll()
   process.exitCode = undefined
-  rmSync(dir, { recursive: true, force: true })
 })
+
+after(() => rmSync(dir, { recursive: true, force: true }))
 
 describe('run with a mocked SDK', () => {
   let sdk: AwsClientStub<MWAAClient>
@@ -159,6 +158,12 @@ describe('run with a mocked SDK', () => {
     assert.match(stdout, /ThrottlingException: boom/)
   })
 
+  it('reports a rejection that is not an Error', async () => {
+    await run(inputs(), { send: () => Promise.reject('socket hang up') })
+    assert.equal(process.exitCode, 1)
+    assert.match(stdout, /::error::GetEnvironment failed for 'prod' in us-west-2: Error: socket hang up/)
+  })
+
   it('fails when the response has no Environment', async () => {
     sdk.on(GetEnvironmentCommand).resolves({})
     await run(inputs(), sdkClient())
@@ -209,6 +214,15 @@ describe('run with a mocked SDK', () => {
     writeFileSync(summaryFile, '')
     await run(inputs({ summary: false }), sdkClient())
     assert.equal(readFileSync(summaryFile, 'utf8'), '')
+  })
+
+  it('escapes environment values in the job summary', async () => {
+    sdk.on(GetEnvironmentCommand).resolves({ Environment: { ...full, DagS3Path: '<img src=x onerror=alert(1)>' } })
+    await run(inputs({ summary: true }), sdkClient())
+    assert.equal(process.exitCode, undefined)
+    const md = readFileSync(summaryFile, 'utf8')
+    assert.doesNotMatch(md, /<img/)
+    assert.match(md, /<code>&#60;img src=x onerror=alert\(1\)&#62;<\/code>/)
   })
 
   it('logs status and last update as colored dots', async () => {
@@ -285,6 +299,10 @@ describe('run with the real SDK against a local HTTP server', () => {
 describe('readInputs', () => {
   afterEach(() => {
     for (const k of ['NAME', 'REGION', 'SUMMARY']) delete process.env[`INPUT_${k}`]
+  })
+
+  it('requires the name input', () => {
+    assert.throws(() => readInputs({}), /Input required and not supplied: name/)
   })
 
   it('prefers the region input, then AWS_REGION, then AWS_DEFAULT_REGION', () => {

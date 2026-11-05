@@ -41,8 +41,10 @@ export function summaryStatus(status: string | undefined, tone: Tone = toneOf(st
   return `${SUMMARY_DOT[tone]} ${status ?? ''}`.trimEnd()
 }
 
+export type Outputs = ReturnType<typeof toOutputs>
+
 /** Output name -> value. Fields the environment does not set become empty strings. */
-export function toOutputs(env: Environment): Record<string, string> {
+export function toOutputs(env: Environment) {
   const s = (v: string | undefined) => v ?? ''
   return {
     name: s(env.Name),

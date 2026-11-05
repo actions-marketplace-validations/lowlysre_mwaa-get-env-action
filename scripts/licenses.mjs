@@ -56,19 +56,17 @@ export function writeThirdPartyLicenses(outFile) {
     }
   }
 
-  const sections = [...seen.keys()]
-    .toSorted((a, b) => (a < b ? -1 : a > b ? 1 : 0))
-    .map(key => {
-      const { name, version, license, text, notice } = seen.get(key)
-      const shared = byLicense.get(license)
-      const body =
-        text ??
-        (shared
-          ? `The package ships no license file. Full ${license} text, as shipped by other bundled packages under the same license:\n\n${shared}`
-          : `License: ${license} (no license file shipped in the package)`)
-      const noticeBlock = notice ? `\n\nNOTICE:\n\n${notice}` : ''
-      return `${name}@${version}\nLicense: ${license}\n\n${body}${noticeBlock}`
-    })
+  const sections = [...seen.keys()].toSorted().map(key => {
+    const { name, version, license, text, notice } = seen.get(key)
+    const shared = byLicense.get(license)
+    const body =
+      text ??
+      (shared
+        ? `The package ships no license file. Full ${license} text, as shipped by other bundled packages under the same license:\n\n${shared}`
+        : `License: ${license} (no license file shipped in the package)`)
+    const noticeBlock = notice ? `\n\nNOTICE:\n\n${notice}` : ''
+    return `${name}@${version}\nLicense: ${license}\n\n${body}${noticeBlock}`
+  })
 
   const header = 'Third-party software bundled into dist/index.cjs\n'
   writeFileSync(outFile, `${header}\n${sections.join(`\n\n${'-'.repeat(72)}\n\n`)}\n`)

@@ -5,7 +5,7 @@ npm ci
 npm run check
 ```
 
-`npm run check` type-checks with `tsc`, runs the tests with the built-in Node test runner, and rebuilds `dist/`. The test run enforces coverage thresholds of 95% for lines and functions and 70% for branches over `src/`, excluding the entry point `src/index.ts`. Run `npm run test:coverage` on its own to see the per-file report.
+`npm run check` type-checks with `tsc`, runs the tests with the built-in Node test runner, and rebuilds `dist/`. The test run enforces coverage thresholds of 95% for lines and functions and 90% for branches over `src/`, excluding the entry point `src/index.ts`. Run `npm run test:coverage` on its own to see the per-file report.
 
 <!-- toc -->
 
