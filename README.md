@@ -11,13 +11,13 @@
 
 # Get Amazon MWAA Environment
 
-Get the details of an Amazon MWAA environment in GitHub Actions: status, Airflow version, environment class, web server URL, and the S3 paths and object versions of its requirements, plugins, and startup script. It calls the `GetEnvironment` API (the same data as `aws mwaa get-environment`) with the AWS credentials already in your job, so there are no MWAA CLI or web login tokens to manage.
+Read an Amazon MWAA environment from a workflow and act on what you find: gate a deploy on its status, check which `requirements.txt` version it's running, or confirm it exists before anything touches it. The action calls `GetEnvironment` (the same call as `aws mwaa get-environment`) with the AWS credentials already in your job, so there are no MWAA CLI or web login tokens to deal with.
 
-The step fails with a clear error when the environment doesn't exist, so it doubles as an existence check. Every run also writes a color-coded log, a job summary, and warning annotations for unhealthy environments.
+Status, Airflow version, environment class, web server URL, and the S3 paths and object versions for requirements, plugins, and the startup script all come back as step outputs. A missing environment fails the step with a clear error, and every run leaves a color-coded log, a job summary, and a warning annotation if the environment is unhealthy.
 
-- **Two runtime dependencies**: `@actions/core` and the AWS SDK's MWAA client, bundled into `dist/` with [every third-party license](dist/THIRD_PARTY_LICENSES.txt).
-- **[Immutable releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases)**: a published release's tag and assets can't be changed, so a pinned version always runs the same code.
-- **Hardened CI**: every job blocks network egress with harden-runner, every action is pinned to a commit SHA, the workflows pass zizmor's pedantic audit, and CodeQL scans the code and workflows.
+- 📦 **Two runtime dependencies**: `@actions/core` and the AWS SDK's MWAA client, bundled into `dist/` with [every third-party license](dist/THIRD_PARTY_LICENSES.txt).
+- 🔒 **[Immutable releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases)**: a published release's tag and assets can't be changed, so a pinned version always runs the same code.
+- 🛡️ **Hardened CI**: every job blocks network egress with harden-runner, every action is pinned to a commit SHA, the workflows pass zizmor's pedantic audit, and CodeQL scans the code and workflows.
 
 This action is built and maintained by [lowlysre](https://github.com/lowlysre). It's an independent project, not affiliated with or endorsed by AWS.
 
