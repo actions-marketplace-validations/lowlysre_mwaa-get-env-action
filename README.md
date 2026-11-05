@@ -43,7 +43,7 @@ The action takes the region and credentials from the AWS environment configured 
 ## Outputs
 
 | Output                                                                                            | Description                                           |
-| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+|---------------------------------------------------------------------------------------------------|-------------------------------------------------------|
 | `status`, `last-update-status`                                                                    | Environment status and the status of its last update. |
 | `environment-arn`, `airflow-version`, `environment-class`, `webserver-url`                        | Identity and sizing.                                  |
 | `source-bucket-arn`, `dag-s3-path`                                                                | Where DAGs live.                                      |
@@ -58,7 +58,7 @@ Fields the environment doesn't set are empty strings. See [inputs, outputs, and 
 `aws mwaa get-environment` works in a workflow too. The action wraps the same API for the parts that are tedious in shell.
 
 | Need                                             | This action                                                                         | AWS CLI                                        |
-| ------------------------------------------------ | ----------------------------------------------------------------------------------- | ---------------------------------------------- |
+|--------------------------------------------------|-------------------------------------------------------------------------------------|------------------------------------------------|
 | Outputs usable in later steps                    | ✅ Built in                                                                         | Parse JSON with `jq` yourself                  |
 | Clear failure when the environment doesn't exist | ✅ One readable message                                                             | Match stderr text, which varies by CLI version |
 | Works without the AWS CLI or `jq` on the runner  | ✅ SDK bundled                                                                      | ❌                                             |

@@ -3,7 +3,7 @@
 ## Inputs
 
 | Input     | Required | Default                              | Description                                                                                     |
-| --------- | -------- | ------------------------------------ | ----------------------------------------------------------------------------------------------- |
+|-----------|----------|--------------------------------------|-------------------------------------------------------------------------------------------------|
 | `name`    | yes      |                                      | Name of the MWAA environment. Must match `[a-zA-Z][0-9a-zA-Z-_]*` and be at most 80 characters. |
 | `region`  | no       | `AWS_REGION` or `AWS_DEFAULT_REGION` | AWS region of the environment.                                                                  |
 | `summary` | no       | `true`                               | Write an environment summary to the job summary page.                                           |
@@ -15,7 +15,7 @@ The action reads credentials from the standard AWS provider chain, so run [aws-a
 Fields the environment doesn't set are returned as empty strings. Output names are the kebab-case form of the [`GetEnvironment` response](https://docs.aws.amazon.com/mwaa/latest/API/API_GetEnvironment.html) field names, except `environment-arn` for `Arn`. They match the input and output names of [mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action), so values pass between the two actions without renaming.
 
 | Output                             | Source field                   | Example                                                             |
-| ---------------------------------- | ------------------------------ | ------------------------------------------------------------------- |
+|------------------------------------|--------------------------------|---------------------------------------------------------------------|
 | `name`                             | `Name`                         | `my-environment`                                                    |
 | `status`                           | `Status`                       | `AVAILABLE`                                                         |
 | `environment-arn`                  | `Arn`                          | `arn:aws:airflow:us-east-1:123456789012:environment/my-environment` |
@@ -46,7 +46,7 @@ The action adds a warning annotation, without failing the step, when `status` is
 The action fails the step with an error annotation when:
 
 | Cause                     | Message                                                                  |
-| ------------------------- | ------------------------------------------------------------------------ |
+|---------------------------|--------------------------------------------------------------------------|
 | Environment doesn't exist | `MWAA environment '<name>' was not found in region <region>.`            |
 | Missing IAM permission    | `Access denied calling airflow:GetEnvironment for '<name>' in <region>.` |
 | Invalid environment name  | `Invalid environment name '<name>': ...`                                 |

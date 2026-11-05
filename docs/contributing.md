@@ -10,7 +10,7 @@ npm run check
 ## Layout
 
 | Path                | Purpose                                                         |
-| ------------------- | --------------------------------------------------------------- |
+|---------------------|-----------------------------------------------------------------|
 | `src/index.ts`      | Entry point.                                                    |
 | `src/main.ts`       | Reads inputs, calls `GetEnvironment`, sets outputs and summary. |
 | `src/format.ts`     | Status classification, colors, and the output mapping.          |
