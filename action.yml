@@ -1,0 +1,57 @@
+name: 'Get Amazon MWAA Environment'
+description: 'Get details of an Amazon MWAA environment (GetEnvironment) using standard AWS credentials, with outputs and a job summary.'
+author: 'lowlysre'
+branding:
+  icon: 'cloud'
+  color: 'orange'
+
+inputs:
+  name:
+    description: 'Name of the MWAA environment.'
+    required: true
+  region:
+    description: 'AWS region. Defaults to AWS_REGION or AWS_DEFAULT_REGION from the environment.'
+    required: false
+    default: ''
+  summary:
+    description: 'Write an environment summary to the job summary page.'
+    required: false
+    default: 'true'
+
+outputs:
+  name:
+    description: 'Environment name.'
+  status:
+    description: 'Environment status (for example AVAILABLE or UPDATING).'
+  arn:
+    description: 'Environment ARN.'
+  airflow_version:
+    description: 'Apache Airflow version.'
+  environment_class:
+    description: 'Environment class (for example mw1.small).'
+  webserver_url:
+    description: 'Airflow web server hostname.'
+  source_bucket_arn:
+    description: 'ARN of the S3 bucket holding DAGs and supporting files.'
+  dag_s3_path:
+    description: 'Relative S3 path of the DAGs folder.'
+  requirements_s3_path:
+    description: 'Relative S3 path of requirements.txt.'
+  requirements_s3_object_version:
+    description: 'S3 object version of requirements.txt.'
+  plugins_s3_path:
+    description: 'Relative S3 path of plugins.zip.'
+  plugins_s3_object_version:
+    description: 'S3 object version of plugins.zip.'
+  startup_script_s3_path:
+    description: 'Relative S3 path of the startup script.'
+  startup_script_s3_object_version:
+    description: 'S3 object version of the startup script.'
+  last_update_status:
+    description: 'Status of the last update (SUCCESS, PENDING, FAILED).'
+  json:
+    description: 'Raw JSON of the Environment object.'
+
+runs:
+  using: 'node24'
+  main: 'dist/index.cjs'

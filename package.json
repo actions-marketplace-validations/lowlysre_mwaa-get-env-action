@@ -1,0 +1,27 @@
+{
+  "name": "mwaa-get-env-action",
+  "version": "1.0.0",
+  "description": "GitHub Action that gets details of an Amazon MWAA environment (GetEnvironment).",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node24 --format=cjs --legal-comments=none --outfile=dist/index.cjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.ts",
+    "check": "npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "@actions/core": "^3.0.1",
+    "@aws-sdk/client-mwaa": "^3.1162.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "aws-sdk-client-mock": "^4.1.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}
