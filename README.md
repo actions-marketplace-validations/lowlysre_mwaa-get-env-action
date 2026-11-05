@@ -17,7 +17,7 @@ This action is built and maintained by [lowlysre](https://github.com/lowlysre). 
 
 ## Quick start
 
-This example assumes the repository can use GitHub OIDC to assume an AWS role with `airflow:GetEnvironment`. See [permissions](docs/how-to/permissions.md) for the policy and trust setup.
+This example assumes the repository can use GitHub OIDC to assume an AWS role with `airflow:GetEnvironment`. See [permissions](docs/permissions.md) for the policy and trust setup.
 
 ```yaml
 permissions:
@@ -51,7 +51,7 @@ The action takes the region and credentials from the AWS environment configured 
 | `requirements-s3-object-version`, `plugins-s3-object-version`, `startup-script-s3-object-version` | S3 version IDs the environment runs.                  |
 | `json`                                                                                            | The full `Environment` object, for anything else.     |
 
-Fields the environment doesn't set are empty strings. See [inputs, outputs, and errors](docs/reference/inputs-and-outputs.md) for every field and failure message.
+Fields the environment doesn't set are empty strings. See the [reference](docs/reference.md) for every field and failure message.
 
 ## Action or the AWS CLI
 
@@ -65,19 +65,17 @@ Fields the environment doesn't set are empty strings. See [inputs, outputs, and 
 | Log groups, job summary, and failure annotations | ✅                                                                                  | ❌                                             |
 | Update or create an environment                  | ❌ See [mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action) | ✅                                             |
 
-See [why an action instead of the AWS CLI](docs/explanation/design.md) for the reasoning.
+See the [design notes](docs/reference.md#design-notes) for the reasoning.
 
 ## Related actions
 
-[mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action) updates an environment (`aws mwaa update-environment`) and can wait until it is `AVAILABLE` again. The two share input and output names, so a typical pipeline reads the environment with this action, updates it, then reads it again to confirm. See [update an environment and verify it](docs/how-to/update-and-verify.md) for a complete workflow.
+[mwaa-update-env-action](https://github.com/lowlysre/mwaa-update-env-action) updates an environment (`aws mwaa update-environment`) and can wait until it is `AVAILABLE` again. The two share input and output names, so a typical pipeline reads the environment with this action, updates it, then reads it again to confirm. See [update an environment and verify it](docs/recipes.md#update-an-environment-and-verify-it) for a complete workflow.
 
 ## Documentation
 
-- [Inputs, outputs, and errors](docs/reference/inputs-and-outputs.md)
-- [Permissions and authentication](docs/how-to/permissions.md)
-- [Recipes](docs/how-to/recipes.md): existence checks, gating deploys, detecting S3 drift
-- [Update an environment and verify it](docs/how-to/update-and-verify.md)
-- [Why an action instead of the AWS CLI](docs/explanation/design.md)
+- [Reference](docs/reference.md): inputs, outputs, annotations, errors, and design notes
+- [Recipes](docs/recipes.md): existence checks, gating deploys, S3 drift, and updating with mwaa-update-env-action
+- [Permissions and authentication](docs/permissions.md): IAM policy, OIDC, and troubleshooting
 - [Contributing](docs/contributing.md)
 
 ## License
