@@ -19,7 +19,7 @@ Status, Airflow version, environment class, web server URL, and the S3 paths and
 - 🔒 [Immutable releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases): a published release's tag and assets can't be changed, so a pinned version always runs the same code.
 - 🛡️ Hardened CI: every job blocks network egress with harden-runner, every action is pinned to a commit SHA, the workflows pass zizmor's pedantic audit, and CodeQL scans the code and workflows.
 
-This action is built and maintained by [lowlysre](https://github.com/lowlysre) 🪱. It's an independent project, not affiliated with or endorsed by AWS.
+This action is built and maintained by [lowlysre](https://github.com/lowlysre) 🐍. It's an independent project, not affiliated with or endorsed by AWS.
 
 ## Quick start
 
