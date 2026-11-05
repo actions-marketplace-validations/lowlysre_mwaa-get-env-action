@@ -1,71 +1,96 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
   <title id="title">Get MWAA Environment</title>
-  <desc id="desc">Social card for the mwaa-get-env-action GitHub Action: a workflow step that reads an Amazon MWAA environment, and the step outputs it produces, such as status AVAILABLE and Airflow version 2.10.3.</desc>
+  <desc id="desc">Social card: read an Amazon MWAA environment from GitHub Actions. A workflow step on the right, with the outputs it sets below it, such as status AVAILABLE and Airflow version 2.10.3.</desc>
+  <!-- Palette: the four Apache Airflow pinwheel blades, green, blue, cyan, and red (tones from
+       airflow-core/docs/img/logos/wordmark_1.svg), on Airflow's brand-950 navy. -->
   <defs>
-    <linearGradient id="titleGrad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#f7c37b"/>
-      <stop offset="0.55" stop-color="#ee9a56"/>
-      <stop offset="1" stop-color="#d98080"/>
-    </linearGradient>
-    <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#f7b955"/>
-      <stop offset="1" stop-color="#ee9a56"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="0.85" cy="0.05" r="0.7">
-      <stop offset="0" stop-color="#ff9900" stop-opacity="0.12"/>
-      <stop offset="1" stop-color="#ff9900" stop-opacity="0"/>
-    </radialGradient>
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M40 0H0V40" fill="none" stroke="#161b22" stroke-width="1"/>
+      <path d="M40 0H0V40" fill="none" stroke="#11e1ee" stroke-opacity="0.045" stroke-width="1"/>
     </pattern>
+    <radialGradient id="glow" cx="1080" cy="20" r="700" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#017cee" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#017cee" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="120" cy="660" r="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00ad46" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#00ad46" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="title" x1="80" y1="0" x2="580" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#04d659"/>
+      <stop offset="0.5" stop-color="#11e1ee"/>
+      <stop offset="1" stop-color="#0cb6ff"/>
+    </linearGradient>
   </defs>
 
-  <rect width="1280" height="640" fill="#0d1117"/>
+  <rect width="1280" height="640" fill="#0a2231"/>
   <rect width="1280" height="640" fill="url(#grid)"/>
   <rect width="1280" height="640" fill="url(#glow)"/>
+  <rect width="1280" height="640" fill="url(#glow2)"/>
 
-  <!-- logo tile: a status gauge whose needle sits in the green zone -->
-  <g transform="translate(76 77) scale(0.9375)">
-    <rect x="4" y="4" width="56" height="56" rx="12" fill="#1b2a41"/>
-    <g transform="translate(0 -3)"><g fill="none" stroke-width="4" stroke-linecap="round">
-      <path d="M16 42A16 16 0 0 1 40 28.14" stroke="#f97316"/>
-      <path d="M40 28.14A16 16 0 0 1 48 42" stroke="#3fb950"/>
-      <path d="M32 42L41.2 34.3" stroke="#e6edf3"/>
+  <!-- Mark: a red-to-green status gauge whose green zone ends in the lowlysre worm. 64-unit grid. -->
+  <g transform="translate(78 78) scale(0.875)">
+    <rect x="4" y="4" width="56" height="56" rx="12" fill="#0f3350" stroke="#1d4f73" stroke-width="1.5"/>
+    <g transform="translate(0 -3)" fill="none" stroke-width="4">
+      <path d="M40 28.14A16 16 0 0 1 48 42" stroke="#04d659" stroke-linecap="round"/>
+      <path d="M16 42A16 16 0 0 1 24 28.14" stroke="#ff7557" stroke-linecap="round"/>
+      <path d="M24 28.14A16 16 0 0 1 40 28.14" stroke="#0cb6ff"/>
+      <path d="M32 42L41.2 34.3" stroke="#e6f0f7" stroke-linecap="round"/>
     </g>
-    <circle cx="32" cy="42" r="3.4" fill="#e6edf3"/><circle cx="48" cy="42" r="4" fill="#3fb950"/><circle cx="49.2" cy="40.8" r="1" fill="#1b2a41"/></g>
+    <circle cx="32" cy="39" r="3.4" fill="#e6f0f7"/>
+    <circle cx="48" cy="39" r="4" fill="#04d659"/>
+    <circle cx="49.2" cy="37.8" r="1" fill="#0f3350"/>
+  </g>
+  <g font-family="Segoe UI" font-weight="700" font-size="72" fill="url(#title)">
+    <text x="78" y="226">Get MWAA</text>
+    <text x="78" y="306">Environment</text>
+  </g>
+  <g font-family="Segoe UI" font-size="25" fill="#d6e4ee">
+    <text x="80" y="374">Read an Amazon MWAA environment's status,</text>
+    <text x="80" y="408">Airflow version and S3 paths as step outputs.</text>
+  </g>
+  <g transform="translate(80 446)">
+    <rect width="44" height="4" rx="2" fill="#04d659"/>
+    <rect x="48" width="44" height="4" rx="2" fill="#0cb6ff"/>
+    <rect x="96" width="44" height="4" rx="2" fill="#11e1ee"/>
+    <rect x="144" width="44" height="4" rx="2" fill="#ff7557"/>
+  </g>
+  <text x="80" y="548" font-family="Cascadia Mono" font-size="19" fill="#8fb3c9">lowlysre/mwaa-get-env-action</text>
+  <text x="80" y="580" font-family="Segoe UI" font-size="16" fill="#5f7d92">Not affiliated with AWS or the Apache Software Foundation.</text>
+
+  <!-- Right column: two cards, 510 wide at x=690, 20px apart, stack centred vertically.
+       Card header 48px with the label at y=31 (15px). Workflow YAML is 18px, first baseline
+       y=96, 36px pitch. Outputs are 18px, first baseline y=86, 32px pitch, value column x=296
+       with an r=5 status dot at x=281. Each card ends 24px below its last baseline. -->
+  <!-- Workflow file card -->
+  <g transform="translate(690 77)">
+    <rect width="510" height="228" rx="12" fill="#0e2b40" stroke="#1d4f73" stroke-width="1.5"/>
+    <path d="M0 48H510" stroke="#1d4f73" stroke-width="1.5"/>
+    <text x="26" y="31" font-family="Cascadia Mono" font-size="15" fill="#8fb3c9">.github/workflows/deploy.yml</text>
+    <g font-family="Cascadia Mono" font-size="18" fill="#8fb3c9" xml:space="preserve">
+      <text x="26" y="96">- <tspan fill="#6cc4ff">id</tspan>: <tspan fill="#7be8a6">mwaa</tspan></text>
+      <text x="26" y="132">  <tspan fill="#6cc4ff">uses</tspan>: <tspan fill="#11e1ee">lowlysre/mwaa-get-env-action@v1</tspan></text>
+      <text x="26" y="168">  <tspan fill="#6cc4ff">with</tspan>:</text>
+      <text x="26" y="204">    <tspan fill="#6cc4ff">name</tspan>: <tspan fill="#7be8a6">my-environment</tspan></text>
+    </g>
   </g>
 
-  <g font-family="'Segoe UI', 'Noto Sans', Arial, 'DejaVu Sans', sans-serif">
-    <text x="80" y="232" font-size="80" font-weight="700" fill="url(#titleGrad)">Get MWAA</text>
-    <text x="80" y="318" font-size="80" font-weight="700" fill="url(#titleGrad)">Environment</text>
-
-    <text x="80" y="376" font-size="26" fill="#c9d1d9">Read an Amazon MWAA environment's status,</text>
-    <text x="80" y="412" font-size="26" fill="#c9d1d9">Airflow version and S3 paths as step outputs.</text>
-
-    <rect x="80" y="445" width="190" height="4" rx="2" fill="url(#barGrad)"/>
-
-    <text x="80" y="548" font-family="ui-monospace, Consolas, 'DejaVu Sans Mono', monospace" font-size="20" fill="#8b949e">lowlysre/mwaa-get-env-action</text>
-    <text x="80" y="580" font-size="17" fill="#6e7681">Not affiliated with AWS.</text>
-  </g>
-
-  <!-- workflow snippet card: the step, then the outputs it sets -->
-  <rect x="690" y="96" width="510" height="452" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
-  <line x1="690" y1="152" x2="1200" y2="152" stroke="#30363d" stroke-width="2"/>
-  <circle cx="717" cy="124" r="6" fill="#f85149"/>
-  <circle cx="739" cy="124" r="6" fill="#d29922"/>
-  <circle cx="761" cy="124" r="6" fill="#3fb950"/>
-
-  <g xml:space="preserve" font-family="ui-monospace, Consolas, 'DejaVu Sans Mono', monospace" font-size="18">
-    <text x="718" y="194"><tspan fill="#8b949e">-</tspan><tspan fill="#4493f8"> id:</tspan><tspan fill="#3fb950"> mwaa</tspan></text>
-    <text x="718" y="226"><tspan fill="#ff9900">  uses: lowlysre/mwaa-get-env-action@v1</tspan></text>
-    <text x="718" y="258" fill="#4493f8">  with:</text>
-    <text x="718" y="290"><tspan fill="#4493f8">    name:</tspan><tspan fill="#3fb950"> my-environment</tspan></text>
-
-    <text x="718" y="350" fill="#8b949e"># steps.mwaa.outputs</text>
-    <text x="718" y="384"><tspan fill="#4493f8">status             </tspan><tspan fill="#3fb950">AVAILABLE</tspan></text>
-    <text x="718" y="414"><tspan fill="#4493f8">airflow-version    </tspan><tspan fill="#e6edf3">2.10.3</tspan></text>
-    <text x="718" y="444"><tspan fill="#4493f8">environment-class  </tspan><tspan fill="#e6edf3">mw1.small</tspan></text>
-    <text x="718" y="474"><tspan fill="#4493f8">dag-s3-path        </tspan><tspan fill="#e6edf3">dags</tspan></text>
-    <text x="718" y="504"><tspan fill="#4493f8">last-update-status </tspan><tspan fill="#3fb950">SUCCESS</tspan></text>
-  </g>
-</svg>
+  <!-- Outputs card -->
+  <g transform="translate(690 325)">
+    <rect width="510" height="238" rx="12" fill="#0e2b40" stroke="#1d4f73" stroke-width="1.5"/>
+    <path d="M0 48H510" stroke="#1d4f73" stroke-width="1.5"/>
+    <text x="26" y="31" font-family="Cascadia Mono" font-size="15" fill="#8fb3c9">steps.mwaa.outputs</text>
+    <g font-family="Cascadia Mono" font-size="18" fill="#8fb3c9">
+      <text x="26" y="86">status</text>
+      <circle cx="281" cy="80" r="5" fill="#04d659"/>
+      <text x="296" y="86" fill="#7be8a6">AVAILABLE</text>
+      <text x="26" y="118">last-update-status</text>
+      <circle cx="281" cy="112" r="5" fill="#04d659"/>
+      <text x="296" y="118" fill="#7be8a6">SUCCESS</text>
+      <text x="26" y="150">airflow-version</text>
+      <text x="296" y="150" fill="#e6f0f7">2.10.3</text>
+      <text x="26" y="182">environment-class</text>
+      <text x="296" y="182" fill="#e6f0f7">mw1.small</text>
+      <text x="26" y="214">dag-s3-path</text>
+      <text x="296" y="214" fill="#e6f0f7">dags</text>
+    </g>
+  </g></svg>
