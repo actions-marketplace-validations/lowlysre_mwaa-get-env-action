@@ -2,5 +2,11 @@
   "output": "./dist/THIRD_PARTY_LICENSES.txt",
   "lineEnding": "lf",
   "overwrite": true,
-  "allowMissing": true
+  "allowMissing": true,
+  "exclude": ["@aws-sdk/types", "@smithy/fetch-http-handler", "tslib"],
+  "replace": {
+    "@aws-sdk/credential-provider-http": "./node_modules/@aws-sdk/client-mwaa/LICENSE",
+    "@aws-sdk/credential-provider-login": "./node_modules/@aws-sdk/client-mwaa/LICENSE",
+    "@aws-sdk/nested-clients": "./node_modules/@aws-sdk/client-mwaa/LICENSE"
+  }
 }
