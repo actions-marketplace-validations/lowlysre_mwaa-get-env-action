@@ -9,7 +9,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "build": "node scripts/build.mjs",
+    "build": "node scripts/build.mjs && tpn --ci --no-spinner",
     "typecheck": "tsc --noEmit",
     "test": "node --test test/*.test.ts",
     "test:coverage": "node --test --experimental-test-coverage --test-coverage-include=\"src/**\" --test-coverage-exclude=\"src/index.ts\" --test-coverage-lines=95 --test-coverage-functions=95 --test-coverage-branches=90 test/*.test.ts",
@@ -24,6 +24,7 @@
     "aws-sdk-client-mock": "^4.1.0",
     "esbuild": "^0.28.2",
     "fast-check": "^4.10.2",
+    "third-party-notices": "^0.1.0",
     "typescript": "^7.0.2"
   }
 }

@@ -22,7 +22,7 @@ npm run check
 | `src/format.ts`     | Status colors, log and summary dots, and the output mapping.    |
 | `test/main.test.ts` | Tests against a mocked SDK and against a local HTTP server.     |
 | `dist/index.cjs`    | The bundled action that runs on the runner.                     |
-| `scripts/`          | Build script and the third-party license generator.             |
+| `scripts/`          | Build script.                                                   |
 | `.github/linters/`  | MegaLinter, Prettier, cspell, and markdownlint configuration.   |
 | `.github/codeql/`   | CodeQL configuration.                                           |
 
@@ -32,7 +32,7 @@ The tests use `node:test`, and Node 24 runs the TypeScript directly, so there is
 
 ## The dist directory
 
-The action runs from `dist/index.cjs`, so commit the rebuilt file with source changes. CI rebuilds it and fails when the committed copy is stale.
+The action runs from `dist/index.cjs`, so commit the rebuilt file with source changes. `npm run build` also regenerates `dist/THIRD_PARTY_LICENSES.txt` with [third-party-notices](https://www.npmjs.com/package/third-party-notices) (configured in `third-party-notices.config.json`) and fails when a production dependency has no license text. CI rebuilds `dist/` and fails when the committed copy is stale.
 
 ## Docs
 
