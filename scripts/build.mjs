@@ -1,5 +1,4 @@
 import { build } from 'esbuild'
-import { writeThirdPartyLicenses } from './licenses.mjs'
 
 await build({
   entryPoints: ['src/index.ts'],
@@ -11,6 +10,3 @@ await build({
   legalComments: 'none',
   logLevel: 'info'
 })
-
-const count = writeThirdPartyLicenses('dist/THIRD_PARTY_LICENSES.txt')
-console.log(`Wrote dist/THIRD_PARTY_LICENSES.txt (${count} packages)`)
